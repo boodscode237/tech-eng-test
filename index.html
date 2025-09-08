@@ -86,46 +86,7 @@
             to { transform: rotate(360deg); }
         }
     </style>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase configuration and initialization from environment variables
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth;
-        let userId;
-
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                userId = auth.currentUser.uid;
-                console.log("Firebase initialized successfully. User ID:", userId);
-
-                // Start the test after Firebase is ready
-                document.getElementById('start-screen').classList.remove('hidden');
-                document.getElementById('loader').classList.add('hidden');
-
-            } catch (error) {
-                console.error("Firebase initialization failed:", error);
-                document.getElementById('error-message').classList.remove('hidden');
-                document.getElementById('loader').classList.add('hidden');
-            }
-        }
-
-        initializeFirebase();
-
+    <script>
         // Test questions data
         const questions = {
             vocabulary: [
@@ -343,29 +304,13 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
             updateUI();
         }
 
-        async function submitTest() {
+        function submitTest() {
             document.getElementById('test-container').classList.add('hidden');
             document.getElementById('results-loader').classList.remove('hidden');
 
             const score = calculateScore();
             const level = getLevel(score);
-
-            const testResult = {
-                userId: userId,
-                timestamp: serverTimestamp(),
-                score: score,
-                level: level,
-                answers: userAnswers,
-            };
-
-            try {
-                // Save the result to Firestore
-                const docRef = await addDoc(collection(db, `artifacts/${appId}/users/${userId}/test_results`), testResult);
-                console.log("Document written with ID: ", docRef.id);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-
+            
             document.getElementById('results-loader').classList.add('hidden');
             document.getElementById('results-screen').classList.remove('hidden');
             document.getElementById('score').textContent = score;
@@ -478,7 +423,7 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
 </head>
 <body class="bg-gray-100 p-8 flex items-center justify-center min-h-screen">
 
-    <div id="loader" class="flex flex-col items-center justify-center">
+    <div id="loader" class="hidden flex flex-col items-center justify-center">
         <div class="loading-spinner"></div>
         <p class="mt-4 text-gray-600">Loading test...</p>
     </div>
@@ -487,7 +432,7 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
         <p>Could not initialize the application. Please check your internet connection and try again.</p>
     </div>
 
-    <div id="start-screen" class="hidden card text-center p-8 w-full max-w-lg">
+    <div id="start-screen" class="card text-center p-8 w-full max-w-lg">
         <h1 class="text-3xl font-bold mb-4">Welcome to the English Level Test!</h1>
         <p class="text-gray-600 mb-6">This test will help us understand your English level. It covers vocabulary, grammar, reading, and writing. Don't worry, it's just to help you learn better!</p>
         <button id="start-button" class="btn-primary">Start Test</button>
