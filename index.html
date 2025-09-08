@@ -1,1 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Level Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .section-container {
+            display: none;
+        }
+        .section-container.active {
+            display: block;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .option-button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .option-button:hover {
+            background-color: #f3f4f6;
+        }
+        .option-button.selected {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+            font-weight: 500;
+        }
+        .correct {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+        }
+        .wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #e5e7eb;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #4f46e5;
+            transition: width 0.3s ease;
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4f46e5;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Firebase configuration and initialization from environment variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db, auth;
+        let userId;
+
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                userId = auth.currentUser.uid;
+                console.log("Firebase initialized successfully. User ID:", userId);
+
+                // Start the test after Firebase is ready
+                document.getElementById('start-screen').classList.remove('hidden');
+                document.getElementById('loader').classList.add('hidden');
+
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                document.getElementById('error-message').classList.remove('hidden');
+                document.getElementById('loader').classList.add('hidden');
+            }
+        }
+
+        initializeFirebase();
+
+        // Test questions data
+        const questions = {
+            vocabulary: [
+                { type: 'multiple-choice', text: 'Which word means the same as **happy**?', options: ['sad', 'joyful', 'tired'], answer: 'joyful' },
+                { type: 'multiple-choice', text: 'What is a synonym for **big**?', options: ['small', 'large', 'tiny'], answer: 'large' },
+                { type: 'multiple-choice', text: 'What word is similar to **speak**?', options: ['eat', 'talk', 'sleep'], answer: 'talk' },
+                { type: 'multiple-choice', text: 'Which word means the same as **quick**?', options: ['slow', 'fast', 'long'], answer: 'fast' },
+                { type: 'multiple-choice', text: 'What is a synonym for **close**?', options: ['near', 'far', 'open'], answer: 'near' },
+                { type: 'multiple-choice', text: 'What word is similar to **start**?', options: ['end', 'begin', 'stop'], answer: 'begin' },
+                { type: 'multiple-choice', text: 'A person who teaches is a:', options: ['student', 'teacher', 'doctor'], answer: 'teacher' },
+                { type: 'multiple-choice', text: 'A place where you buy food is a:', options: ['school', 'supermarket', 'library'], answer: 'supermarket' },
+                { type: 'multiple-choice', text: 'A small animal that says "meow" is a:', options: ['dog', 'cat', 'bird'], answer: 'cat' },
+                { type: 'multiple-choice', text: 'A large yellow fruit is a:', options: ['apple', 'banana', 'strawberry'], answer: 'banana' },
+            ],
+            grammar: [
+                { type: 'multiple-choice', text: 'My name ____ John.', options: ['is', 'am', 'are'], answer: 'is' },
+                { type: 'multiple-choice', text: 'They ____ friends.', options: ['is', 'am', 'are'], answer: 'are' },
+                { type: 'multiple-choice', text: 'He ____ a student.', options: ['is', 'am', 'are'], answer: 'is' },
+                { type: 'multiple-choice', text: 'We ____ 12 years old.', options: ['is', 'am', 'are'], answer: 'are' },
+                { type: 'fill-in-the-blank', text: 'My friend, Maria, is a great student. _____ is very smart.', answer: 'she' },
+                { type: 'fill-in-the-blank', text: 'My dog is black and white. _____ is very cute.', answer: 'it' },
+                { type: 'fill-in-the-blank', text: 'My parents are at home. _____ are watching TV.', answer: 'they' },
+                { type: 'fill-in-the-blank', text: 'My brother, Tom, likes to play soccer. _____ is a good player.', answer: 'he' },
+                { type: 'multiple-choice', text: 'I ____ a teacher.', options: ['is', 'am', 'are'], answer: 'am' },
+                { type: 'multiple-choice', text: 'She ____ a cat.', options: ['have', 'has', 'is'], answer: 'has' },
+            ],
+            reading: {
+                text: `Hello! My name is Ana. I am 13 years old. I am a student at Green Hills School. My favorite subject is art. I like to draw and paint pictures. I have one brother. His name is Leo. He is 15 years old. He likes to play video games.
+
+Leo and I like to play outside. We often go to the park near our house on the weekends. The park has many green trees and a big lake. We play soccer and sometimes we ride our bikes. The park is a good place to be with our friends, too.
+
+We also have a dog. Her name is Bella. She is very friendly and loves to play with us. Every morning, before school, I walk Bella with my dad. In the evening, after we finish our homework, Leo throws a ball for her in our garden. Bella is a fun part of our family.`,
+                questions: [
+                    { text: 'How old is Ana?', options: ['12', '13', '15'], answer: '13' },
+                    { text: 'What is Ana\'s favorite subject?', options: ['English', 'Art', 'History'], answer: 'Art' },
+                    { text: 'What is her brother\'s name?', options: ['Ana', 'Leo', 'Bella'], answer: 'Leo' },
+                    { text: 'How old is her brother?', options: ['13', '14', '15'], answer: '15' },
+                    { text: 'Where do Ana and Leo go on the weekends?', options: ['To school', 'To the park', 'To a museum'], answer: 'To the park' },
+                    { text: 'What does Leo like to do?', options: ['Draw and paint', 'Play soccer', 'Play video games'], answer: 'Play video games' },
+                    { text: 'Who walks the dog in the morning?', options: ['Ana and her dad', 'Leo and his dad', 'Ana and Leo'], answer: 'Ana and her dad' },
+                    { text: 'What color is the park in the story?', options: ['Blue', 'Green', 'Yellow'], answer: 'Green' },
+                    { text: 'Is Bella a friendly dog?', options: ['Yes', 'No', 'The text does not say'], answer: 'Yes' },
+                    { text: 'What is the name of the school?', options: ['Green Hills School', 'Bella School', 'Art School'], answer: 'Green Hills School' },
+                ]
+            },
+            writing: {
+                prompt: 'Write 3-4 sentences about your favorite hobby and why you like it.',
+                questions: [{ text: 'Write about your favorite hobby.', type: 'textarea' }]
+            }
+        };
+
+        const totalQuestions = questions.vocabulary.length + questions.grammar.length + questions.reading.questions.length;
+
+        let userAnswers = {
+            vocabulary: {},
+            grammar: {},
+            reading: {},
+            writing: ''
+        };
+
+        let currentSection = 'vocabulary';
+        let currentQuestionIndex = 0;
+
+        const sections = ['vocabulary', 'grammar', 'reading', 'writing'];
+        const sectionNames = {
+            'vocabulary': 'Part 1: Vocabulary',
+            'grammar': 'Part 2: Grammar',
+            'reading': 'Part 3: Reading Comprehension',
+            'writing': 'Part 4: Writing'
+        };
+
+        function updateUI() {
+            // Update progress bar
+            const completedQuestions = sections.slice(0, sections.indexOf(currentSection)).reduce((sum, section) => {
+                if (questions[section].questions) {
+                     return sum + questions[section].questions.length;
+                } else {
+                    return sum + questions[section].length;
+                }
+            }, currentQuestionIndex);
+            
+            const progress = (completedQuestions / totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+
+            // Hide all sections and show the current one
+            sections.forEach(sec => {
+                document.getElementById(sec + '-section').classList.remove('active');
+            });
+            document.getElementById(currentSection + '-section').classList.add('active');
+
+            // Update title and content
+            document.getElementById('section-title').textContent = sectionNames[currentSection];
+            
+            // Handle specific sections
+            if (currentSection === 'vocabulary' || currentSection === 'grammar') {
+                renderQuestion(currentQuestionIndex, questions[currentSection][currentQuestionIndex], document.getElementById(currentSection + '-questions'));
+            } else if (currentSection === 'reading') {
+                document.getElementById('reading-text').innerHTML = `<p class="mb-4 text-gray-700">${questions.reading.text.replace(/\n\n/g, '</p><p class="mb-4 text-gray-700">')}</p>`;
+                renderQuestions(questions.reading.questions, document.getElementById('reading-questions'));
+            } else if (currentSection === 'writing') {
+                document.getElementById('writing-prompt').textContent = questions.writing.prompt;
+            }
+        }
+
+        function renderQuestion(index, q, container) {
+            container.innerHTML = '';
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'mb-4';
+
+            const questionText = document.createElement('p');
+            questionText.className = 'text-lg font-medium mb-2';
+            questionText.textContent = `${index + 1}. ${q.text}`;
+            questionDiv.appendChild(questionText);
+
+            if (q.type === 'multiple-choice') {
+                q.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option;
+                    button.onclick = () => {
+                        userAnswers[currentSection][index] = option;
+                        document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+                        button.classList.add('selected');
+                    };
+                    if (userAnswers[currentSection][index] === option) {
+                         button.classList.add('selected');
+                    }
+                    questionDiv.appendChild(button);
+                });
+            } else if (q.type === 'image') {
+                const image = document.createElement('img');
+                image.src = q.image;
+                image.className = 'w-full h-auto mb-4 rounded-lg';
+                questionDiv.appendChild(image);
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500';
+                input.placeholder = 'Enter word...';
+                input.oninput = (e) => userAnswers[currentSection][index] = e.target.value.toLowerCase().trim();
+                if (userAnswers[currentSection][index]) {
+                     input.value = userAnswers[currentSection][index];
+                }
+                questionDiv.appendChild(input);
+            } else if (q.type === 'fill-in-the-blank') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500';
+                input.placeholder = 'Enter pronoun...';
+                input.oninput = (e) => userAnswers[currentSection][index] = e.target.value.toLowerCase().trim();
+                if (userAnswers[currentSection][index]) {
+                     input.value = userAnswers[currentSection][index];
+                }
+                questionDiv.appendChild(input);
+            }
+            container.appendChild(questionDiv);
+        }
+
+        function renderQuestions(qs, container) {
+            container.innerHTML = '';
+            qs.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'mb-4';
+                const questionText = document.createElement('p');
+                questionText.className = 'text-lg font-medium mb-2';
+                questionText.textContent = `${index + 1}. ${q.text}`;
+                questionDiv.appendChild(questionText);
+                
+                q.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    button.textContent = option;
+                    button.onclick = () => {
+                        userAnswers[currentSection][index] = option;
+                        document.querySelectorAll(`#${currentSection}-questions button`).forEach(btn => btn.classList.remove('selected'));
+                        button.classList.add('selected');
+                    };
+                    if (userAnswers[currentSection][index] === option) {
+                         button.classList.add('selected');
+                    }
+                    questionDiv.appendChild(button);
+                });
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function nextQuestion() {
+            const totalInSection = (currentSection === 'reading') ? questions.reading.questions.length : questions[currentSection].length;
+
+            if (currentQuestionIndex < totalInSection - 1) {
+                currentQuestionIndex++;
+            } else {
+                currentQuestionIndex = 0;
+                const currentSectionIndex = sections.indexOf(currentSection);
+                if (currentSectionIndex < sections.length - 1) {
+                    currentSection = sections[currentSectionIndex + 1];
+                } else {
+                    submitTest();
+                    return;
+                }
+            }
+            updateUI();
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+            } else {
+                const currentSectionIndex = sections.indexOf(currentSection);
+                if (currentSectionIndex > 0) {
+                    currentSection = sections[currentSectionIndex - 1];
+                    const prevTotal = (currentSection === 'reading') ? questions.reading.questions.length : questions[currentSection].length;
+                    currentQuestionIndex = prevTotal - 1;
+                }
+            }
+            updateUI();
+        }
+
+        async function submitTest() {
+            document.getElementById('test-container').classList.add('hidden');
+            document.getElementById('results-loader').classList.remove('hidden');
+
+            const score = calculateScore();
+            const level = getLevel(score);
+
+            const testResult = {
+                userId: userId,
+                timestamp: serverTimestamp(),
+                score: score,
+                level: level,
+                answers: userAnswers,
+            };
+
+            try {
+                // Save the result to Firestore
+                const docRef = await addDoc(collection(db, `artifacts/${appId}/users/${userId}/test_results`), testResult);
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+
+            document.getElementById('results-loader').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('total-questions').textContent = totalQuestions;
+
+            // Show a summary of answers for review
+            displayReview();
+        }
+
+        function calculateScore() {
+            let score = 0;
+            // Vocabulary
+            questions.vocabulary.forEach((q, i) => {
+                if (userAnswers.vocabulary[i] && userAnswers.vocabulary[i].toLowerCase().trim() === q.answer.toLowerCase().trim()) {
+                    score++;
+                }
+            });
+            // Grammar
+            questions.grammar.forEach((q, i) => {
+                const userAnswer = userAnswers.grammar[i] ? userAnswers.grammar[i].toLowerCase().trim() : '';
+                const correctAnswer = q.answer.toLowerCase().trim();
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            // Reading
+            questions.reading.questions.forEach((q, i) => {
+                const userAnswer = userAnswers.reading[i] ? userAnswers.reading[i].toLowerCase().trim() : '';
+                const correctAnswer = q.answer.toLowerCase().trim();
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+            return score;
+        }
+
+        function getLevel(score) {
+            const percentage = (score / totalQuestions) * 100;
+            if (percentage > 85) return "A1+";
+            if (percentage > 60) return "A1";
+            return "Below A1";
+        }
+
+        function displayReview() {
+            const reviewContainer = document.getElementById('review-answers');
+            reviewContainer.innerHTML = '';
+            
+            // Vocabulary Review
+            const vocabTitle = document.createElement('h3');
+            vocabTitle.className = 'text-xl font-bold mt-8 mb-4';
+            vocabTitle.textContent = 'Part 1: Vocabulary Review';
+            reviewContainer.appendChild(vocabTitle);
+            questions.vocabulary.forEach((q, i) => {
+                const userAnswer = userAnswers.vocabulary[i] ? userAnswers.vocabulary[i].toLowerCase().trim() : 'No answer';
+                const correctAnswer = q.answer.toLowerCase().trim();
+                const isCorrect = userAnswer === correctAnswer;
+                const item = document.createElement('p');
+                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
+                reviewContainer.appendChild(item);
+            });
+
+            // Grammar Review
+            const grammarTitle = document.createElement('h3');
+            grammarTitle.className = 'text-xl font-bold mt-8 mb-4';
+            grammarTitle.textContent = 'Part 2: Grammar Review';
+            reviewContainer.appendChild(grammarTitle);
+            questions.grammar.forEach((q, i) => {
+                const userAnswer = userAnswers.grammar[i] ? userAnswers.grammar[i].toLowerCase().trim() : 'No answer';
+                const correctAnswer = q.answer.toLowerCase().trim();
+                const isCorrect = userAnswer === correctAnswer;
+                const item = document.createElement('p');
+                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
+                reviewContainer.appendChild(item);
+            });
+        }
+
+        // Initialize event listeners
+        window.onload = function() {
+            document.getElementById('start-button').onclick = () => {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('test-container').classList.remove('hidden');
+                updateUI();
+            };
+            document.getElementById('next-button').onclick = nextQuestion;
+            document.getElementById('prev-button').onclick = prevQuestion;
+        };
+    </script>
+</head>
+<body class="bg-gray-100 p-8 flex items-center justify-center min-h-screen">
+
+    <div id="loader" class="flex flex-col items-center justify-center">
+        <div class="loading-spinner"></div>
+        <p class="mt-4 text-gray-600">Loading test...</p>
+    </div>
+
+    <div id="error-message" class="hidden text-center text-red-500 font-bold">
+        <p>Could not initialize the application. Please check your internet connection and try again.</p>
+    </div>
+
+    <div id="start-screen" class="hidden card text-center p-8 w-full max-w-lg">
+        <h1 class="text-3xl font-bold mb-4">Welcome to the English Level Test!</h1>
+        <p class="text-gray-600 mb-6">This test will help us understand your English level. It covers vocabulary, grammar, reading, and writing. Don't worry, it's just to help you learn better!</p>
+        <button id="start-button" class="btn-primary">Start Test</button>
+    </div>
+
+    <div id="test-container" class="hidden card w-full">
+        <h2 id="section-title" class="text-2xl font-bold mb-4"></h2>
+        <div class="progress-bar mb-6">
+            <div id="progress-fill" class="progress-bar-fill w-0"></div>
+        </div>
+        
+        <!-- Vocabulary Section -->
+        <div id="vocabulary-section" class="section-container">
+            <div id="vocabulary-questions" class="space-y-6"></div>
+        </div>
+
+        <!-- Grammar Section -->
+        <div id="grammar-section" class="section-container">
+            <div id="grammar-questions" class="space-y-6"></div>
+        </div>
+        
+        <!-- Reading Section -->
+        <div id="reading-section" class="section-container">
+            <h3 class="text-xl font-bold mb-4">Read the text and answer the questions.</h3>
+            <div id="reading-text" class="text-gray-700 leading-relaxed mb-6 border-l-4 border-gray-200 pl-4"></div>
+            <div id="reading-questions" class="space-y-6"></div>
+        </div>
+
+        <!-- Writing Section -->
+        <div id="writing-section" class="section-container">
+            <h3 class="text-xl font-bold mb-4">Part 4: Writing</h3>
+            <p id="writing-prompt" class="text-gray-700 mb-4"></p>
+            <textarea id="writing-textarea" class="w-full p-4 border rounded-lg h-48" placeholder="Write your answer here..."></textarea>
+            <div id="writing-actions" class="mt-4 flex justify-end">
+                <button id="writing-save-btn" class="btn-primary" onclick="userAnswers.writing = document.getElementById('writing-textarea').value;">Save</button>
+            </div>
+        </div>
+        
+        <div class="flex justify-between mt-8">
+            <button id="prev-button" class="btn-primary">Previous</button>
+            <button id="next-button" class="btn-primary">Next</button>
+        </div>
+    </div>
+
+    <div id="results-loader" class="hidden flex flex-col items-center justify-center">
+        <div class="loading-spinner"></div>
+        <p class="mt-4 text-gray-600">Calculating your results...</p>
+    </div>
+
+    <div id="results-screen" class="hidden card text-center p-8 w-full max-w-lg">
+        <h1 class="text-3xl font-bold mb-4 text-green-600">Test Complete!</h1>
+        <p class="text-xl mb-2">Your Score: <span id="score" class="font-bold text-4xl text-indigo-600"></span> / <span id="total-questions" class="text-2xl"></span></p>
+        <p class="text-lg mb-6">Your Estimated Level: <span id="level" class="font-bold text-3xl text-indigo-600"></span></p>
+        <h2 class="text-2xl font-bold mt-8 mb-4">Review Your Answers</h2>
+        <div id="review-answers" class="text-left"></div>
+    </div>
+</body>
+</html>
