@@ -224,9 +224,10 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
                 renderQuestion(currentQuestionIndex, questions[currentSection][currentQuestionIndex], document.getElementById(currentSection + '-questions'));
             } else if (currentSection === 'reading') {
                 document.getElementById('reading-text').innerHTML = `<p class="mb-4 text-gray-700">${questions.reading.text.replace(/\n\n/g, '</p><p class="mb-4 text-gray-700">')}</p>`;
-                renderQuestions(questions.reading.questions, document.getElementById('reading-questions'));
+                renderReadingQuestion(currentQuestionIndex, document.getElementById('reading-question-container'));
             } else if (currentSection === 'writing') {
                 document.getElementById('writing-prompt').textContent = questions.writing.prompt;
+                document.getElementById('writing-textarea').value = userAnswers.writing;
             }
         }
 
@@ -283,32 +284,31 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
             container.appendChild(questionDiv);
         }
 
-        function renderQuestions(qs, container) {
+        function renderReadingQuestion(index, container) {
             container.innerHTML = '';
-            qs.forEach((q, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'mb-4';
-                const questionText = document.createElement('p');
-                questionText.className = 'text-lg font-medium mb-2';
-                questionText.textContent = `${index + 1}. ${q.text}`;
-                questionDiv.appendChild(questionText);
-                
-                q.options.forEach(option => {
-                    const button = document.createElement('button');
-                    button.className = 'option-button';
-                    button.textContent = option;
-                    button.onclick = () => {
-                        userAnswers[currentSection][index] = option;
-                        document.querySelectorAll(`#${currentSection}-questions button`).forEach(btn => btn.classList.remove('selected'));
-                        button.classList.add('selected');
-                    };
-                    if (userAnswers[currentSection][index] === option) {
-                         button.classList.add('selected');
-                    }
-                    questionDiv.appendChild(button);
-                });
-                container.appendChild(questionDiv);
+            const q = questions.reading.questions[index];
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'mb-4';
+            const questionText = document.createElement('p');
+            questionText.className = 'text-lg font-medium mb-2';
+            questionText.textContent = `${index + 1}. ${q.text}`;
+            questionDiv.appendChild(questionText);
+            
+            q.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => {
+                    userAnswers.reading[index] = option;
+                    document.querySelectorAll(`#reading-question-container button`).forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                };
+                if (userAnswers.reading[index] === option) {
+                     button.classList.add('selected');
+                }
+                questionDiv.appendChild(button);
             });
+            container.appendChild(questionDiv);
         }
 
         function nextQuestion() {
@@ -443,6 +443,21 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
                 item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
                 reviewContainer.appendChild(item);
             });
+
+            // Reading Comprehension Review
+            const readingTitle = document.createElement('h3');
+            readingTitle.className = 'text-xl font-bold mt-8 mb-4';
+            readingTitle.textContent = 'Part 3: Reading Comprehension Review';
+            reviewContainer.appendChild(readingTitle);
+            questions.reading.questions.forEach((q, i) => {
+                const userAnswer = userAnswers.reading[i] ? userAnswers.reading[i].toLowerCase().trim() : 'No answer';
+                const correctAnswer = q.answer.toLowerCase().trim();
+                const isCorrect = userAnswer === correctAnswer;
+                const item = document.createElement('p');
+                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
+                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
+                reviewContainer.appendChild(item);
+            });
         }
 
         // Initialize event listeners
@@ -454,6 +469,10 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
             };
             document.getElementById('next-button').onclick = nextQuestion;
             document.getElementById('prev-button').onclick = prevQuestion;
+            // Attach the event listener for the writing save button
+            document.getElementById('writing-save-btn').onclick = () => {
+                userAnswers.writing = document.getElementById('writing-textarea').value;
+            };
         };
     </script>
 </head>
@@ -494,7 +513,7 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
         <div id="reading-section" class="section-container">
             <h3 class="text-xl font-bold mb-4">Read the text and answer the questions.</h3>
             <div id="reading-text" class="text-gray-700 leading-relaxed mb-6 border-l-4 border-gray-200 pl-4"></div>
-            <div id="reading-questions" class="space-y-6"></div>
+            <div id="reading-question-container" class="space-y-6"></div>
         </div>
 
         <!-- Writing Section -->
@@ -503,7 +522,7 @@ We also have a dog. Her name is Bella. She is very friendly and loves to play wi
             <p id="writing-prompt" class="text-gray-700 mb-4"></p>
             <textarea id="writing-textarea" class="w-full p-4 border rounded-lg h-48" placeholder="Write your answer here..."></textarea>
             <div id="writing-actions" class="mt-4 flex justify-end">
-                <button id="writing-save-btn" class="btn-primary" onclick="userAnswers.writing = document.getElementById('writing-textarea').value;">Save</button>
+                <button id="writing-save-btn" class="btn-primary">Save</button>
             </div>
         </div>
         
