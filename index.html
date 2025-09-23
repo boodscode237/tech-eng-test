@@ -3,491 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Level Test</title>
+    <title>What is a Computer?</title>
+    <!-- Use Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            scroll-behavior: smooth;
         }
-        .container {
-            max-width: 900px;
-        }
-        .section-container {
-            display: none;
-        }
-        .section-container.active {
-            display: block;
-        }
-        .card {
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-        .btn-primary {
-            background-color: #4f46e5;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #4338ca;
-        }
-        .option-button {
-            display: block;
+        .section-separator {
             width: 100%;
-            text-align: left;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            border: 1px solid #d1d5db;
-            margin-top: 0.5rem;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-        .option-button:hover {
-            background-color: #f3f4f6;
-        }
-        .option-button.selected {
-            background-color: #e0e7ff;
-            border-color: #4f46e5;
-            font-weight: 500;
-        }
-        .correct {
-            background-color: #dcfce7;
-            border-color: #16a34a;
-        }
-        .wrong {
-            background-color: #fee2e2;
-            border-color: #ef4444;
-        }
-        .progress-bar {
-            height: 10px;
+            height: 1px;
             background-color: #e5e7eb;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            background-color: #4f46e5;
-            transition: width 0.3s ease;
-        }
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #4f46e5;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            margin: 4rem 0;
         }
     </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header Section -->
+    <header class="text-center my-8 md:my-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">What is a Computer?</h1>
+        <p class="text-xl text-gray-600">Hardware & Software</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <!-- Introduction Section -->
+        <section class="text-center mb-12">
+            <p class="text-lg leading-relaxed">
+                Hello and welcome! This class is a fun way to learn about computers in English. We will talk about two big parts of a computer: **hardware** and **software**. Let's begin!
+            </p>
+        </section>
+
+        <!-- Hardware Section -->
+        <section id="hardware" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-center">Hardware: You Can Touch It</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div class="md:w-1/2">
+                    <p class="text-lg leading-relaxed">
+                        **Hardware** is the physical part of a computer. You can hold it, see it, and touch it. The mouse, keyboard, and monitor are all hardware. The parts inside, like the **CPU** (the computer's brain) and **motherboard** (the main board), are also hardware.
+                    </p>
+                    <p class="mt-4 text-gray-500">
+                        Think of hardware like the body of a robot!
+                    </p>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    
+
+[Image of computer hardware components]
+
+                </div>
+            </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <!-- Software Section -->
+        <section id="software" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-center">Software: The Programs</h2>
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row-reverse items-center space-y-6 md:space-y-0 md:space-x-8">
+                <div class="md:w-1/2">
+                    <p class="text-lg leading-relaxed">
+                        **Software** is the programs and data that tell the hardware what to do. You cannot touch software. For example, your favorite game, a web browser, or the **Operating System (OS)** like Windows or macOS are all software. The OS is the most important program because it helps all other hardware and software to **work together**.
+                    </p>
+                    <p class="mt-4 text-gray-500">
+                        Think of software as the robot's brain and thoughts!
+                    </p>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    
+                </div>
+            </div>
+        </section>
+
+        <div class="section-separator"></div>
+
+        <!-- Interactive Quiz Section -->
+        <section id="quiz" class="mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-center">Final Quiz: Test Your Knowledge</h2>
+            <div class="bg-blue-100 rounded-xl shadow-lg p-6 md:p-8">
+                <div id="quiz-container">
+                    <h3 id="question-text" class="text-xl md:text-2xl font-bold text-center mb-6"></h3>
+                    <p id="hint-text" class="text-center text-sm italic text-gray-500 mb-4"></p>
+                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    <div id="rationale-container" class="mt-4 hidden p-4 bg-gray-50 rounded-lg text-gray-700">
+                        <p id="rationale-text" class="text-base font-medium leading-relaxed"></p>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-8">
+                    <button id="next-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-transform duration-300 transform hover:scale-105">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
     <script>
-        // Test questions data
-        const questions = {
-            vocabulary: [
-                { type: 'multiple-choice', text: 'Which word means the same as **happy**?', options: ['sad', 'joyful', 'tired'], answer: 'joyful' },
-                { type: 'multiple-choice', text: 'What is a synonym for **big**?', options: ['small', 'large', 'tiny'], answer: 'large' },
-                { type: 'multiple-choice', text: 'What word is similar to **speak**?', options: ['eat', 'talk', 'sleep'], answer: 'talk' },
-                { type: 'multiple-choice', text: 'Which word means the same as **quick**?', options: ['slow', 'fast', 'long'], answer: 'fast' },
-                { type: 'multiple-choice', text: 'What is a synonym for **close**?', options: ['near', 'far', 'open'], answer: 'near' },
-                { type: 'multiple-choice', text: 'What word is similar to **start**?', options: ['end', 'begin', 'stop'], answer: 'begin' },
-                { type: 'multiple-choice', text: 'A person who teaches is a:', options: ['student', 'teacher', 'doctor'], answer: 'teacher' },
-                { type: 'multiple-choice', text: 'A place where you buy food is a:', options: ['school', 'supermarket', 'library'], answer: 'supermarket' },
-                { type: 'multiple-choice', text: 'A small animal that says "meow" is a:', options: ['dog', 'cat', 'bird'], answer: 'cat' },
-                { type: 'multiple-choice', text: 'A large yellow fruit is a:', options: ['apple', 'banana', 'strawberry'], answer: 'banana' },
-            ],
-            grammar: [
-                { type: 'multiple-choice', text: 'My name ____ John.', options: ['is', 'am', 'are'], answer: 'is' },
-                { type: 'multiple-choice', text: 'They ____ friends.', options: ['is', 'am', 'are'], answer: 'are' },
-                { type: 'multiple-choice', text: 'He ____ a student.', options: ['is', 'am', 'are'], answer: 'is' },
-                { type: 'multiple-choice', text: 'We ____ 12 years old.', options: ['is', 'am', 'are'], answer: 'are' },
-                { type: 'fill-in-the-blank', text: 'My friend, Maria, is a great student. _____ is very smart.', answer: 'she' },
-                { type: 'fill-in-the-blank', text: 'My dog is black and white. _____ is very cute.', answer: 'it' },
-                { type: 'fill-in-the-blank', text: 'My parents are at home. _____ are watching TV.', answer: 'they' },
-                { type: 'fill-in-the-blank', text: 'My brother, Tom, likes to play soccer. _____ is a good player.', answer: 'he' },
-                { type: 'multiple-choice', text: 'I ____ a teacher.', options: ['is', 'am', 'are'], answer: 'am' },
-                { type: 'multiple-choice', text: 'She ____ a cat.', options: ['have', 'has', 'is'], answer: 'has' },
-            ],
-            reading: {
-                text: `Hello! My name is Ana. I am 13 years old. I am a student at Green Hills School. My favorite subject is art. I like to draw and paint pictures. I have one brother. His name is Leo. He is 15 years old. He likes to play video games.
-
-Leo and I like to play outside. We often go to the park near our house on the weekends. The park has many green trees and a big lake. We play soccer and sometimes we ride our bikes. The park is a good place to be with our friends, too.
-
-We also have a dog. Her name is Bella. She is very friendly and loves to play with us. Every morning, before school, I walk Bella with my dad. In the evening, after we finish our homework, Leo throws a ball for her in our garden. Bella is a fun part of our family.`,
-                questions: [
-                    { text: 'How old is Ana?', options: ['12', '13', '15'], answer: '13' },
-                    { text: 'What is Ana\'s favorite subject?', options: ['English', 'Art', 'History'], answer: 'Art' },
-                    { text: 'What is her brother\'s name?', options: ['Ana', 'Leo', 'Bella'], answer: 'Leo' },
-                    { text: 'How old is her brother?', options: ['13', '14', '15'], answer: '15' },
-                    { text: 'Where do Ana and Leo go on the weekends?', options: ['To school', 'To the park', 'To a museum'], answer: 'To the park' },
-                    { text: 'What does Leo like to do?', options: ['Draw and paint', 'Play soccer', 'Play video games'], answer: 'Play video games' },
-                    { text: 'Who walks the dog in the morning?', options: ['Ana and her dad', 'Leo and his dad', 'Ana and Leo'], answer: 'Ana and her dad' },
-                    { text: 'What color is the park in the story?', options: ['Blue', 'Green', 'Yellow'], answer: 'Green' },
-                    { text: 'Is Bella a friendly dog?', options: ['Yes', 'No', 'The text does not say'], answer: 'Yes' },
-                    { text: 'What is the name of the school?', options: ['Green Hills School', 'Bella School', 'Art School'], answer: 'Green Hills School' },
+        const quizQuestions = [
+            // --- 10 Easy Questions ---
+            {
+                question: "Which of these is **hardware**?",
+                hint: "Think about what you can touch.",
+                options: [
+                    { text: "A game program", isCorrect: false, rationale: "A game program is software; you cannot touch it." },
+                    { text: "The keyboard", isCorrect: true, rationale: "The keyboard is a physical part of the computer, so it is hardware." },
+                    { text: "The Windows operating system", isCorrect: false, rationale: "Windows is a program, which is software." },
+                    { text: "An app on your phone", isCorrect: false, rationale: "An app is software, you cannot touch it." }
                 ]
             },
-            writing: {
-                prompt: 'Write 3-4 sentences about your favorite hobby and why you like it.',
-                questions: [{ text: 'Write about your favorite hobby.', type: 'textarea' }]
-            }
-        };
-
-        const totalQuestions = questions.vocabulary.length + questions.grammar.length + questions.reading.questions.length;
-
-        let userAnswers = {
-            vocabulary: {},
-            grammar: {},
-            reading: {},
-            writing: ''
-        };
-
-        let currentSection = 'vocabulary';
-        let currentQuestionIndex = 0;
-
-        const sections = ['vocabulary', 'grammar', 'reading', 'writing'];
-        const sectionNames = {
-            'vocabulary': 'Part 1: Vocabulary',
-            'grammar': 'Part 2: Grammar',
-            'reading': 'Part 3: Reading Comprehension',
-            'writing': 'Part 4: Writing'
-        };
-
-        function updateUI() {
-            // Update progress bar
-            const completedQuestions = sections.slice(0, sections.indexOf(currentSection)).reduce((sum, section) => {
-                if (questions[section].questions) {
-                     return sum + questions[section].questions.length;
-                } else {
-                    return sum + questions[section].length;
-                }
-            }, currentQuestionIndex);
-            
-            const progress = (completedQuestions / totalQuestions) * 100;
-            document.getElementById('progress-fill').style.width = `${progress}%`;
-
-            // Hide all sections and show the current one
-            sections.forEach(sec => {
-                document.getElementById(sec + '-section').classList.remove('active');
-            });
-            document.getElementById(currentSection + '-section').classList.add('active');
-
-            // Update title and content
-            document.getElementById('section-title').textContent = sectionNames[currentSection];
-            
-            // Handle specific sections
-            if (currentSection === 'vocabulary' || currentSection === 'grammar') {
-                renderQuestion(currentQuestionIndex, questions[currentSection][currentQuestionIndex], document.getElementById(currentSection + '-questions'));
-            } else if (currentSection === 'reading') {
-                document.getElementById('reading-text').innerHTML = `<p class="mb-4 text-gray-700">${questions.reading.text.replace(/\n\n/g, '</p><p class="mb-4 text-gray-700">')}</p>`;
-                renderReadingQuestion(currentQuestionIndex, document.getElementById('reading-question-container'));
-            } else if (currentSection === 'writing') {
-                document.getElementById('writing-prompt').textContent = questions.writing.prompt;
-                document.getElementById('writing-textarea').value = userAnswers.writing;
-            }
-        }
-
-        function renderQuestion(index, q, container) {
-            container.innerHTML = '';
-            const questionDiv = document.createElement('div');
-            questionDiv.className = 'mb-4';
-
-            const questionText = document.createElement('p');
-            questionText.className = 'text-lg font-medium mb-2';
-            questionText.textContent = `${index + 1}. ${q.text}`;
-            questionDiv.appendChild(questionText);
-
-            if (q.type === 'multiple-choice') {
-                q.options.forEach(option => {
-                    const button = document.createElement('button');
-                    button.className = 'option-button';
-                    button.textContent = option;
-                    button.onclick = () => {
-                        userAnswers[currentSection][index] = option;
-                        document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
-                        button.classList.add('selected');
-                    };
-                    if (userAnswers[currentSection][index] === option) {
-                         button.classList.add('selected');
+            {
+                question: "Which of these is **software**?",
+                hint: "Think about what you cannot touch.",
+                options: [
+                    { text: "The computer's mouse", isCorrect: false, rationale: "The mouse is a physical device, so it is hardware." },
+                    { text: "The printer", isCorrect: false, rationale: "A printer is a physical device, so it is hardware." },
+                    { text: "A web browser", isCorrect: true, rationale: "A web browser is a program that tells the hardware what to do. You cannot touch it." },
+                    { text: "The monitor", isCorrect: false, rationale: "A monitor is a physical device, so it is hardware." }
+                ]
+            },
+            {
+                question: "What is the **CPU**?",
+                hint: "It's the computer's 'brain'.",
+                options: [
+                    { text: "A type of software", isCorrect: false, rationale: "The CPU is a physical chip inside the computer, so it is hardware." },
+                    { text: "The main screen", isCorrect: false, rationale: "The screen is a monitor, an output device." },
+                    { text: "The 'brain' of the computer", isCorrect: true, rationale: "The CPU performs all the calculations and actions for the computer, just like a brain." },
+                    { text: "A computer game", isCorrect: false, rationale: "A computer game is a type of software." }
+                ]
+            },
+            {
+                question: "Which device is used for **input**?",
+                hint: "Input sends information TO the computer.",
+                options: [
+                    { text: "A speaker", isCorrect: false, rationale: "A speaker is an output device because it gives you sound FROM the computer." },
+                    { text: "A printer", isCorrect: false, rationale: "A printer is an output device because it gives you a physical document FROM the computer." },
+                    { text: "A keyboard", isCorrect: true, rationale: "You use a keyboard to type words TO the computer, so it is an input device." },
+                    { text: "A monitor", isCorrect: false, rationale: "A monitor is an output device because it shows you a screen FROM the computer." }
+                ]
+            },
+            {
+                question: "Which device is used for **output**?",
+                hint: "Output gets information FROM the computer.",
+                options: [
+                    { text: "A microphone", isCorrect: false, rationale: "A microphone takes your voice and sends it TO the computer, so it is an input device." },
+                    { text: "A mouse", isCorrect: false, rationale: "A mouse takes your hand movements and sends them TO the computer, so it is an input device." },
+                    { text: "A monitor", isCorrect: true, rationale: "A monitor shows you images FROM the computer, so it is an output device." },
+                    { text: "A keyboard", isCorrect: false, rationale: "A keyboard takes your typing and sends it TO the computer, so it is an input device." }
+                ]
+            },
+            {
+                question: "What is the purpose of a **storage drive**?",
+                hint: "Think about saving files.",
+                options: [
+                    { text: "To make the computer faster right now", isCorrect: false, rationale: "RAM helps the computer work faster for current tasks." },
+                    { text: "To save files for a long time", isCorrect: true, rationale: "A storage drive saves your files, like photos and documents, even when the computer is off." },
+                    { text: "To print documents", isCorrect: false, rationale: "A printer is used to print documents." },
+                    { text: "To connect all parts together", isCorrect: false, rationale: "The motherboard connects all the parts together." }
+                ]
+            },
+            {
+                question: "What is the **motherboard**?",
+                hint: "It's the main board inside the computer that connects everything.",
+                options: [
+                    { text: "The brain of the computer", isCorrect: false, rationale: "The CPU is the brain of the computer." },
+                    { text: "A short-term memory chip", isCorrect: false, rationale: "This is a description of RAM." },
+                    { text: "A physical board that connects all the parts", isCorrect: true, rationale: "The motherboard is the main circuit board that connects all the other components." },
+                    { text: "The operating system", isCorrect: false, rationale: "The operating system is a program, which is software." }
+                ]
+            },
+            {
+                question: "What is the purpose of **RAM**?",
+                hint: "It's the computer's 'short memory'.",
+                options: [
+                    { text: "To save files forever", isCorrect: false, rationale: "The storage drive saves files forever." },
+                    { text: "To help the computer work fast **right now**", isCorrect: true, rationale: "RAM holds data for programs that are currently running, making the computer fast." },
+                    { text: "To connect the CPU to the monitor", isCorrect: false, rationale: "The motherboard connects the components." },
+                    { text: "To print out documents", isCorrect: false, rationale: "A printer prints documents." }
+                ]
+            },
+            {
+                question: "You turn off the computer. What happens to the information in **RAM**?",
+                hint: "RAM is short-term memory.",
+                options: [
+                    { text: "It is saved to the storage drive.", isCorrect: false, rationale: "You must save the file yourself for it to move to storage." },
+                    { text: "It disappears.", isCorrect: true, rationale: "RAM is temporary and loses all its data when the computer is turned off." },
+                    { text: "It stays until you turn on the computer again.", isCorrect: false, rationale: "The data in RAM is gone as soon as the power is off." },
+                    { text: "It is copied to the CPU.", isCorrect: false, rationale: "The CPU is the brain and processes information, it does not store it." }
+                ]
+            },
+            {
+                question: "The **Operating System (OS)** is a type of...",
+                hint: "Can you touch it?",
+                options: [
+                    { text: "Hardware", isCorrect: false, rationale: "The OS is a program, so it is software." },
+                    { text: "Physical device", isCorrect: false, rationale: "A physical device is hardware." },
+                    { text: "Storage drive", isCorrect: false, rationale: "A storage drive is hardware used to save files." },
+                    { text: "Software", isCorrect: true, rationale: "The OS is the main program that manages the computer, which makes it software." }
+                ]
+            },
+            // --- 4 Harder Questions ---
+            {
+                question: "Which statement best describes the difference between RAM and storage?",
+                hint: "Think about what happens to your work if you forget to click 'save' before the computer turns off.",
+                options: [
+                    {
+                        text: "RAM is the computer's temporary, short-term memory, and storage is the computer's long-term memory for saving files.",
+                        isCorrect: true,
+                        rationale: "RAM is used for active tasks and loses its data when the power is off. Storage is used to save data permanently, even when the computer is turned off."
+                    },
+                    {
+                        text: "RAM is a type of hardware, while storage is a type of software.",
+                        isCorrect: false,
+                        rationale: "Both RAM and storage devices (like a hard drive or SSD) are physical components, making them both types of hardware."
+                    },
+                    {
+                        text: "RAM is for saving files forever, and storage is for running programs right now.",
+                        isCorrect: false,
+                        rationale: "This statement has the functions reversed. RAM holds data for programs currently in use, and storage (like a hard drive) saves files permanently."
+                    },
+                    {
+                        text: "RAM is located outside the computer, and storage is located inside the computer.",
+                        isCorrect: false,
+                        rationale: "Both RAM and most common storage devices are located inside the computer tower or laptop."
                     }
-                    questionDiv.appendChild(button);
-                });
-            } else if (q.type === 'image') {
-                const image = document.createElement('img');
-                image.src = q.image;
-                image.className = 'w-full h-auto mb-4 rounded-lg';
-                questionDiv.appendChild(image);
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500';
-                input.placeholder = 'Enter word...';
-                input.oninput = (e) => userAnswers[currentSection][index] = e.target.value.toLowerCase().trim();
-                if (userAnswers[currentSection][index]) {
-                     input.value = userAnswers[currentSection][index];
-                }
-                questionDiv.appendChild(input);
-            } else if (q.type === 'fill-in-the-blank') {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500';
-                input.placeholder = 'Enter pronoun...';
-                input.oninput = (e) => userAnswers[currentSection][index] = e.target.value.toLowerCase().trim();
-                if (userAnswers[currentSection][index]) {
-                     input.value = userAnswers[currentSection][index];
-                }
-                questionDiv.appendChild(input);
+                ]
+            },
+            {
+                question: "If the motherboard is broken, why would a computer be unable to start?",
+                hint: "Consider the motherboard's role as a connection point for all the other parts.",
+                options: [
+                    {
+                        text: "All other components, like the CPU and RAM, need the motherboard to connect and communicate.",
+                        isCorrect: true,
+                        rationale: "The motherboard is the central circuit board that provides the physical and electrical connections for all other hardware components to work together."
+                    },
+                    {
+                        text: "The motherboard is the only part that can touch software.",
+                        isCorrect: false,
+                        rationale: "The motherboard is a piece of hardware and cannot touch software. It is the programs that give instructions to the hardware."
+                    },
+                    {
+                        text: "The motherboard has its own operating system that is needed to turn on the computer.",
+                        isCorrect: false,
+                        rationale: "The operating system is software and is typically stored on a storage device, not the motherboard itself."
+                    },
+                    {
+                        text: "The motherboard is the brain of the computer and tells everything what to do.",
+                        isCorrect: false,
+                        rationale: "The CPU is the brain of the computer. The motherboard is like the nervous system that connects the parts."
+                    }
+                ]
+            },
+            {
+                question: "A computer is like a car. In this analogy, if the car’s engine is the CPU, then what would the car’s dashboard and gauges represent?",
+                hint: "Think about whether a dashboard gives information to you or takes information from you.",
+                options: [
+                    {
+                        text: "An output device, because they show you information.",
+                        isCorrect: true,
+                        rationale: "The dashboard and gauges are an output device. They take information from the car's engine and systems and display it for you to see."
+                    },
+                    {
+                        text: "The motherboard, because they connect everything.",
+                        isCorrect: false,
+                        rationale: "The motherboard connects the components, while the dashboard and gauges are a way for you to see information from the car."
+                    },
+                    {
+                        text: "The storage drive, because they hold information.",
+                        isCorrect: false,
+                        rationale: "While the gauges hold information, they are not a long-term storage solution. They are a display."
+                    },
+                    {
+                        text: "An input device, because you use them to drive.",
+                        isCorrect: false,
+                        rationale: "Input devices for a car would be the steering wheel and pedals. The gauges are for viewing information, not giving it to the car."
+                    }
+                ]
+            },
+            {
+                question: "In a computer, what is the correct relationship between the CPU, the OS, and an application like a game?",
+                hint: "Think about the hierarchy of a computer system, from the most general program to the specific task.",
+                options: [
+                    {
+                        text: "The OS (software) runs on the CPU (hardware), and the game (software) runs with the help of the OS.",
+                        isCorrect: true,
+                        rationale: "The operating system is the main program that manages the CPU and other hardware, and all other applications must use the OS to function."
+                    },
+                    {
+                        text: "The CPU (hardware) gives instructions to the OS (software), which gives instructions to the game (software).",
+                        isCorrect: false,
+                        rationale: "The relationship is the other way around. The software (OS and game) gives instructions to the hardware (CPU)."
+                    },
+                    {
+                        text: "The game (software) runs directly on the CPU (hardware) without the help of the OS (software).",
+                        isCorrect: false,
+                        rationale: "The operating system is necessary for the game to be able to communicate with and use the hardware resources."
+                    },
+                    {
+                        text: "All three are hardware components that work together.",
+                        isCorrect: false,
+                        rationale: "Both the OS and the game are software, while the CPU is hardware."
+                    }
+                ]
             }
-            container.appendChild(questionDiv);
-        }
+        ];
 
-        function renderReadingQuestion(index, container) {
-            container.innerHTML = '';
-            const q = questions.reading.questions[index];
-            const questionDiv = document.createElement('div');
-            questionDiv.className = 'mb-4';
-            const questionText = document.createElement('p');
-            questionText.className = 'text-lg font-medium mb-2';
-            questionText.textContent = `${index + 1}. ${q.text}`;
-            questionDiv.appendChild(questionText);
-            
-            q.options.forEach(option => {
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = quizQuestions.length;
+
+        const questionText = document.getElementById('question-text');
+        const hintText = document.getElementById('hint-text');
+        const optionsContainer = document.getElementById('options-container');
+        const rationaleContainer = document.getElementById('rationale-container');
+        const rationaleText = document.getElementById('rationale-text');
+        const nextButton = document.getElementById('next-button');
+
+        // Function to render the current question
+        function showQuestion() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            questionText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}: ${currentQuestion.question}`;
+            hintText.textContent = currentQuestion.hint;
+            optionsContainer.innerHTML = '';
+            rationaleContainer.classList.add('hidden');
+            nextButton.style.display = 'none';
+
+            currentQuestion.options.forEach((option, index) => {
                 const button = document.createElement('button');
-                button.className = 'option-button';
-                button.textContent = option;
-                button.onclick = () => {
-                    userAnswers.reading[index] = option;
-                    document.querySelectorAll(`#reading-question-container button`).forEach(btn => btn.classList.remove('selected'));
-                    button.classList.add('selected');
-                };
-                if (userAnswers.reading[index] === option) {
-                     button.classList.add('selected');
-                }
-                questionDiv.appendChild(button);
+                button.textContent = option.text;
+                button.classList.add('bg-white', 'hover:bg-gray-100', 'text-gray-800', 'font-semibold', 'py-4', 'px-6', 'rounded-lg', 'shadow-md', 'transition-all', 'duration-200', 'hover:scale-105', 'w-full', 'text-left');
+
+                button.onclick = () => checkAnswer(index, button, option.isCorrect, option.rationale);
+                optionsContainer.appendChild(button);
             });
-            container.appendChild(questionDiv);
         }
 
-        function nextQuestion() {
-            const totalInSection = (currentSection === 'reading') ? questions.reading.questions.length : questions[currentSection].length;
+        // Function to check the selected answer
+        function checkAnswer(selectedIndex, button, isCorrect, rationale) {
+            // Disable all buttons after an answer is chosen
+            Array.from(optionsContainer.children).forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('cursor-not-allowed', 'opacity-70');
+                if (btn === button) {
+                    btn.classList.remove('hover:bg-gray-100', 'hover:scale-105');
+                }
+            });
 
-            if (currentQuestionIndex < totalInSection - 1) {
-                currentQuestionIndex++;
+            if (isCorrect) {
+                score++;
+                button.classList.remove('bg-white', 'text-gray-800');
+                button.classList.add('bg-green-400', 'text-white');
             } else {
-                currentQuestionIndex = 0;
-                const currentSectionIndex = sections.indexOf(currentSection);
-                if (currentSectionIndex < sections.length - 1) {
-                    currentSection = sections[currentSectionIndex + 1];
-                } else {
-                    submitTest();
-                    return;
-                }
+                button.classList.remove('bg-white', 'text-gray-800');
+                button.classList.add('bg-red-400', 'text-white');
             }
-            updateUI();
+            
+            // Show rationale and 'Next' button
+            rationaleText.textContent = rationale;
+            rationaleContainer.classList.remove('hidden');
+            nextButton.style.display = 'block';
         }
 
-        function prevQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
+        // Event listener for the next button
+        nextButton.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                showQuestion();
             } else {
-                const currentSectionIndex = sections.indexOf(currentSection);
-                if (currentSectionIndex > 0) {
-                    currentSection = sections[currentSectionIndex - 1];
-                    const prevTotal = (currentSection === 'reading') ? questions.reading.questions.length : questions[currentSection].length;
-                    currentQuestionIndex = prevTotal - 1;
-                }
+                // End of quiz
+                questionText.textContent = "Quiz Complete!";
+                hintText.textContent = "";
+                optionsContainer.innerHTML = '';
+                rationaleContainer.classList.add('hidden');
+                nextButton.style.display = 'none';
+
+                // Display final score
+                const finalMessage = document.createElement('h3');
+                finalMessage.classList.add('text-3xl', 'font-bold', 'text-center', 'text-blue-600', 'mt-8');
+                finalMessage.textContent = `Your final score is: ${score} out of ${totalQuestions}`;
+                document.getElementById('quiz-container').appendChild(finalMessage);
             }
-            updateUI();
-        }
+        });
 
-        function submitTest() {
-            document.getElementById('test-container').classList.add('hidden');
-            document.getElementById('results-loader').classList.remove('hidden');
-
-            const score = calculateScore();
-            const level = getLevel(score);
-            
-            document.getElementById('results-loader').classList.add('hidden');
-            document.getElementById('results-screen').classList.remove('hidden');
-            document.getElementById('score').textContent = score;
-            document.getElementById('level').textContent = level;
-            document.getElementById('total-questions').textContent = totalQuestions;
-
-            // Show a summary of answers for review
-            displayReview();
-        }
-
-        function calculateScore() {
-            let score = 0;
-            // Vocabulary
-            questions.vocabulary.forEach((q, i) => {
-                if (userAnswers.vocabulary[i] && userAnswers.vocabulary[i].toLowerCase().trim() === q.answer.toLowerCase().trim()) {
-                    score++;
-                }
-            });
-            // Grammar
-            questions.grammar.forEach((q, i) => {
-                const userAnswer = userAnswers.grammar[i] ? userAnswers.grammar[i].toLowerCase().trim() : '';
-                const correctAnswer = q.answer.toLowerCase().trim();
-                if (userAnswer === correctAnswer) {
-                    score++;
-                }
-            });
-            // Reading
-            questions.reading.questions.forEach((q, i) => {
-                const userAnswer = userAnswers.reading[i] ? userAnswers.reading[i].toLowerCase().trim() : '';
-                const correctAnswer = q.answer.toLowerCase().trim();
-                if (userAnswer === correctAnswer) {
-                    score++;
-                }
-            });
-            return score;
-        }
-
-        function getLevel(score) {
-            const percentage = (score / totalQuestions) * 100;
-            if (percentage > 85) return "A1+";
-            if (percentage > 60) return "A1";
-            return "Below A1";
-        }
-
-        function displayReview() {
-            const reviewContainer = document.getElementById('review-answers');
-            reviewContainer.innerHTML = '';
-            
-            // Vocabulary Review
-            const vocabTitle = document.createElement('h3');
-            vocabTitle.className = 'text-xl font-bold mt-8 mb-4';
-            vocabTitle.textContent = 'Part 1: Vocabulary Review';
-            reviewContainer.appendChild(vocabTitle);
-            questions.vocabulary.forEach((q, i) => {
-                const userAnswer = userAnswers.vocabulary[i] ? userAnswers.vocabulary[i].toLowerCase().trim() : 'No answer';
-                const correctAnswer = q.answer.toLowerCase().trim();
-                const isCorrect = userAnswer === correctAnswer;
-                const item = document.createElement('p');
-                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
-                reviewContainer.appendChild(item);
-            });
-
-            // Grammar Review
-            const grammarTitle = document.createElement('h3');
-            grammarTitle.className = 'text-xl font-bold mt-8 mb-4';
-            grammarTitle.textContent = 'Part 2: Grammar Review';
-            reviewContainer.appendChild(grammarTitle);
-            questions.grammar.forEach((q, i) => {
-                const userAnswer = userAnswers.grammar[i] ? userAnswers.grammar[i].toLowerCase().trim() : 'No answer';
-                const correctAnswer = q.answer.toLowerCase().trim();
-                const isCorrect = userAnswer === correctAnswer;
-                const item = document.createElement('p');
-                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
-                reviewContainer.appendChild(item);
-            });
-
-            // Reading Comprehension Review
-            const readingTitle = document.createElement('h3');
-            readingTitle.className = 'text-xl font-bold mt-8 mb-4';
-            readingTitle.textContent = 'Part 3: Reading Comprehension Review';
-            reviewContainer.appendChild(readingTitle);
-            questions.reading.questions.forEach((q, i) => {
-                const userAnswer = userAnswers.reading[i] ? userAnswers.reading[i].toLowerCase().trim() : 'No answer';
-                const correctAnswer = q.answer.toLowerCase().trim();
-                const isCorrect = userAnswer === correctAnswer;
-                const item = document.createElement('p');
-                item.className = `p-2 my-2 rounded-lg ${isCorrect ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`;
-                item.innerHTML = `**${i + 1}.** Your answer: **${userAnswer}** - Correct answer: **${correctAnswer}**`;
-                reviewContainer.appendChild(item);
-            });
-        }
-
-        // Initialize event listeners
-        window.onload = function() {
-            document.getElementById('start-button').onclick = () => {
-                document.getElementById('start-screen').classList.add('hidden');
-                document.getElementById('test-container').classList.remove('hidden');
-                updateUI();
-            };
-            document.getElementById('next-button').onclick = nextQuestion;
-            document.getElementById('prev-button').onclick = prevQuestion;
-            // Attach the event listener for the writing save button
-            document.getElementById('writing-save-btn').onclick = () => {
-                userAnswers.writing = document.getElementById('writing-textarea').value;
-            };
-        };
+        // Start the quiz when the page loads
+        window.onload = showQuestion;
     </script>
-</head>
-<body class="bg-gray-100 p-8 flex items-center justify-center min-h-screen">
 
-    <div id="loader" class="hidden flex flex-col items-center justify-center">
-        <div class="loading-spinner"></div>
-        <p class="mt-4 text-gray-600">Loading test...</p>
-    </div>
-
-    <div id="error-message" class="hidden text-center text-red-500 font-bold">
-        <p>Could not initialize the application. Please check your internet connection and try again.</p>
-    </div>
-
-    <div id="start-screen" class="card text-center p-8 w-full max-w-lg">
-        <h1 class="text-3xl font-bold mb-4">Welcome to the English Level Test!</h1>
-        <p class="text-gray-600 mb-6">This test will help us understand your English level. It covers vocabulary, grammar, reading, and writing. Don't worry, it's just to help you learn better!</p>
-        <button id="start-button" class="btn-primary">Start Test</button>
-    </div>
-
-    <div id="test-container" class="hidden card w-full">
-        <h2 id="section-title" class="text-2xl font-bold mb-4"></h2>
-        <div class="progress-bar mb-6">
-            <div id="progress-fill" class="progress-bar-fill w-0"></div>
-        </div>
-        
-        <!-- Vocabulary Section -->
-        <div id="vocabulary-section" class="section-container">
-            <div id="vocabulary-questions" class="space-y-6"></div>
-        </div>
-
-        <!-- Grammar Section -->
-        <div id="grammar-section" class="section-container">
-            <div id="grammar-questions" class="space-y-6"></div>
-        </div>
-        
-        <!-- Reading Section -->
-        <div id="reading-section" class="section-container">
-            <h3 class="text-xl font-bold mb-4">Read the text and answer the questions.</h3>
-            <div id="reading-text" class="text-gray-700 leading-relaxed mb-6 border-l-4 border-gray-200 pl-4"></div>
-            <div id="reading-question-container" class="space-y-6"></div>
-        </div>
-
-        <!-- Writing Section -->
-        <div id="writing-section" class="section-container">
-            <h3 class="text-xl font-bold mb-4">Part 4: Writing</h3>
-            <p id="writing-prompt" class="text-gray-700 mb-4"></p>
-            <textarea id="writing-textarea" class="w-full p-4 border rounded-lg h-48" placeholder="Write your answer here..."></textarea>
-            <div id="writing-actions" class="mt-4 flex justify-end">
-                <button id="writing-save-btn" class="btn-primary">Save</button>
-            </div>
-        </div>
-        
-        <div class="flex justify-between mt-8">
-            <button id="prev-button" class="btn-primary">Previous</button>
-            <button id="next-button" class="btn-primary">Next</button>
-        </div>
-    </div>
-
-    <div id="results-loader" class="hidden flex flex-col items-center justify-center">
-        <div class="loading-spinner"></div>
-        <p class="mt-4 text-gray-600">Calculating your results...</p>
-    </div>
-
-    <div id="results-screen" class="hidden card text-center p-8 w-full max-w-lg">
-        <h1 class="text-3xl font-bold mb-4 text-green-600">Test Complete!</h1>
-        <p class="text-xl mb-2">Your Score: <span id="score" class="font-bold text-4xl text-indigo-600"></span> / <span id="total-questions" class="text-2xl"></span></p>
-        <p class="text-lg mb-6">Your Estimated Level: <span id="level" class="font-bold text-3xl text-indigo-600"></span></p>
-        <h2 class="text-2xl font-bold mt-8 mb-4">Review Your Answers</h2>
-        <div id="review-answers" class="text-left"></div>
-    </div>
 </body>
 </html>
