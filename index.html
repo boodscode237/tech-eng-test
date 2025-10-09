@@ -1,3 +1,7 @@
+<!-- 
+    Technical English Reading Comprehension & Vocabulary Test
+    Focus: Live Group Voting, Session-based Votes, Kid-Friendly Design, Interactive Particles.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +27,10 @@
             background-image: linear-gradient(135deg, #a78bfa 0%, #34d399 100%); 
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* CRITICAL FIX: Aligns items to the top instead of center */
+            align-items: flex-start; 
             min-height: 100vh;
-            padding: 20px; /* Ensure padding on all sides */
+            padding: 20px; 
             position: relative;
-            /* FIX: Removed 'overflow: hidden;' and added explicit vertical scrolling */
             overflow-x: hidden; 
             overflow-y: auto; 
         }
@@ -43,7 +46,7 @@
             padding: 2.5rem; 
             max-width: 95%;
             width: 750px; 
-            margin-top: 20px; /* Added margins for scroll breathing room */
+            margin-top: 20px; 
             margin-bottom: 20px;
             z-index: 10;
         }
@@ -172,7 +175,7 @@
     </div>
 
     <script>
-        // --- DATA SETUP ---
+        // --- DATA SETUP (Omitted for brevity, remains the same) ---
         const passages = [
             { id: 1, title: "Passage 1: The Browser and the Homepage", text: "Every day, Maria wants to watch a video. First, she opens her browser program. This is the application she uses for the internet. She looks at the top of the screen where the Address Bar is. In this space, she must type the full URL of the website. For example, she types `www.videozone.com`. After she presses 'Enter,' the website starts to load. The first screen she sees is the Homepage. This is the main page where she can start her search. Maria always starts here because it is fast. When the whole website loads, she is ready to begin." },
             { id: 2, title: "Passage 2: Finding Information", text: "Juan needs to find a recipe for pizza. He types the word 'pizza' into the Search Bar. He clicks the 'Search' button. The page loads quickly, but it is very long! Juan does not see the recipe immediately, so he must scroll down the page with his mouse wheel. He keeps scrolling and then sees many small pictures. These are icons for different videos and recipes. He sees one that looks delicious. He clicks the link next to the picture. He now opens a new page that has the recipe. The new page loads, and he is ready to cook." },
@@ -223,13 +226,11 @@
             { id: 40, q: "40. The word types is a verb. What is the base form of this verb?", options: ["type", "typing", "typed", "typess"], correct: 0, passage: 4 }
         ];
 
-        // --- STATE MANAGEMENT ---
+        // --- STATE MANAGEMENT (Omitted for brevity, remains the same) ---
         let state = {
             currentPassageIndex: 0,
             currentQuestionIndex: -1,
-            // userAnswers: { qId: selectedOptionIndex } - tracks the FINAL group choice after Lock-In
             userAnswers: {}, 
-            // localVotes: { qId: { 0: count, 1: count, ... } } - live, local vote counter
             localVotes: {}, 
             isFinished: false
         };
@@ -242,36 +243,24 @@
             state.localVotes[q.id] = { 0: 0, 1: 0, 2: 0, 3: 0 };
         });
 
-        // --- CORE QUIZ FUNCTIONS ---
-
+        // --- CORE QUIZ FUNCTIONS (Omitted for brevity, remains the same) ---
         function getQuestionsForCurrentPassage() {
             const passageId = state.currentPassageIndex + 1;
             return allQuestions.filter(q => q.passage === passageId);
         }
 
-        /**
-         * Handles a single student's vote. This function allows multiple clicks.
-         */
         function handleAnswer(qId, selectedIndex) {
-            // Check if the answer has already been locked in
             if (state.userAnswers[qId] !== undefined) { 
                 return;
             }
-
-            // Increment vote count and re-render immediately
             state.localVotes[qId][selectedIndex]++;
             render(); 
         }
 
-        /**
-         * Locks in the group's answer (the option with the most votes) and reveals grading.
-         */
         function lockInVote(qId) {
             const currentQVotes = state.localVotes[qId];
             let maxVoteCount = -1;
             let maxVoteIndex = -1;
-
-            // Find the majority choice (Local Choice)
             for (let i = 0; i < 4; i++) {
                 const count = currentQVotes[i] || 0;
                 if (count > maxVoteCount) {
@@ -279,14 +268,9 @@
                     maxVoteIndex = i;
                 }
             }
-
-            // Record the majority choice as the group's final answer
             state.userAnswers[qId] = maxVoteIndex;
-
-            // Now re-render to show the correct/wrong feedback based on the majority choice
             render();
         }
-
 
         function render() {
             if (state.isFinished) {
@@ -320,9 +304,8 @@
                 const qId = currentQ.id;
                 const currentQVotes = state.localVotes[qId] || { 0: 0, 1: 0, 2: 0, 3: 0 };
                 let maxVoteCount = -1;
-                let maxVoteIndex = -1; // The index of the group's majority vote
+                let maxVoteIndex = -1; 
 
-                // Calculate max vote and public choice index
                 for (let i = 0; i < 4; i++) {
                     const count = currentQVotes[i] || 0;
                     if (count > maxVoteCount) {
@@ -344,26 +327,20 @@
                     let voteText = `<span class="vote-count">(${count} votes)</span>`;
                     
                     if (isVoted) {
-                        // After Lock-In: Show Grading
                         classes += ' pointer-events-none '; 
                         
                         if (isCorrect) {
                             classes += ' correct-choice';
                         } else if (index === groupAnswerIndex && !isCorrect) {
-                            // Highlight the group's incorrect choice in red
                             classes += ' wrong-choice';
                         }
 
-                        // Show star on the group's official, locked-in answer
                         if (index === groupAnswerIndex) {
                             starHtml = `<span class="public-vote-star"> (${isCorrect ? 'Correct Group Answer' : 'Group Answer'})</span>`;
                         }
 
                     } else {
-                        // Before Lock-In: Show live vote counts
-                        // Highlight the current majority option with a star
                         if (isMajorityChoice && maxVoteCount > 0) {
-                            // The requested update for "CHOICE" is here:
                             starHtml = `<span class="public-vote-star"> (CHOICE)</span>`;
                         }
                     }
@@ -383,15 +360,11 @@
                     `;
                 }).join('');
 
-
-                // Control buttons based on state
                 let questionControlsHtml = '';
                 if (isVoted) {
-                    // Answer is locked in, show Next button
                     actionButton.style.display = 'block';
                     actionButton.textContent = 'Next Question';
                 } else {
-                    // Answer is not locked in, show Lock-In button
                     actionButton.style.display = 'none';
                     questionControlsHtml = `
                         <div class="mt-8">
@@ -442,7 +415,6 @@
             }
 
             render();
-            // Scroll to the top of the glass container for smooth transition
             document.querySelector('.glass-container').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -466,11 +438,15 @@
         }
         
         
-        // --- PARTICLE EFFECT LOGIC (Simple JS Canvas) ---
+        // --- INTERACTIVE PARTICLE EFFECT LOGIC (New Swarm System) ---
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        var W, H; // Changed to 'var' to prevent redeclaration error
+        // Fixed the variable declaration issue with 'var'
+        var W, H; 
+        
+        // Mouse/Interaction state
+        let mouse = { x: null, y: null, radius: 100 };
 
         function resizeCanvas() {
             W = window.innerWidth;
@@ -478,60 +454,121 @@
             canvas.width = W;
             canvas.height = H;
         }
+        
+        // Listen for mouse movement to update the interaction point
+        canvas.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y + window.scrollY;
+        });
+
+        // Hide mouse interaction when pointer leaves the window
+        canvas.addEventListener('mouseleave', function() {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
 
         class Particle {
-            constructor(x, y) {
-                this.x = x || Math.random() * W;
-                this.y = y || Math.random() * H;
-                this.radius = 2 + Math.random() * 4;
-                // Light, playful colors
+            constructor() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.radius = 2 + Math.random() * 2;
+                this.vx = (Math.random() - 0.5) * 1; // Velocity X
+                this.vy = (Math.random() - 0.5) * 1; // Velocity Y
+
+                // Use the light background colors for the particles
                 const colors = ['#fde047', '#34d399', '#f97316', '#a78bfa'];
                 this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.alpha = 0.4 + Math.random() * 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.4;
-                this.speedY = (Math.random() - 0.5) * 0.4;
             }
 
             draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.globalAlpha = 0.8;
                 ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fill();
             }
 
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+                // Check boundaries and reverse velocity
+                if (this.x < 0 || this.x > W) this.vx *= -1;
+                if (this.y < 0 || this.y > H) this.vy *= -1;
 
-                // Simple wrap around the screen
-                if (this.x < 0) this.x = W;
-                if (this.x > W) this.x = 0;
-                if (this.y < 0) this.y = H;
-                if (this.y > H) this.y = 0;
+                this.x += this.vx;
+                this.y += this.vy;
+            }
 
-                // Slight random movement for a 'floating' feel
-                this.x += Math.random() * 0.2 - 0.1;
-                this.y += Math.random() * 0.2 - 0.1;
+            // Method to repel particles from the mouse
+            interact() {
+                if (mouse.x === null || mouse.y === null) return;
+
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    
+                    // Force is stronger when closer, but limited to prevent instability
+                    const maxForce = 5; 
+                    const force = Math.min(maxForce, (mouse.radius - distance) / mouse.radius); 
+
+                    // Apply repulsion force to velocity
+                    this.vx += forceDirectionX * force * 0.5;
+                    this.vy += forceDirectionY * force * 0.5;
+
+                    // Limit velocity to prevent particles from flying off too fast
+                    const maxSpeed = 3;
+                    this.vx = Math.min(Math.max(this.vx, -maxSpeed), maxSpeed);
+                    this.vy = Math.min(Math.max(this.vy, -maxSpeed), maxSpeed);
+                }
             }
         }
 
         function initParticles() {
             particles = [];
-            // Adjust density for screen size
-            const particleCount = Math.floor((W * H) / 20000); 
+            // Use slightly more particles for the connecting effect
+            const particleCount = Math.floor((W * H) / 12000); 
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle());
             }
         }
 
+        function connectParticles() {
+            let maxDistance = 90; // Only connect particles within this distance
+
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        // Calculate opacity based on distance (closer = more opaque)
+                        const opacity = 1 - (distance / maxDistance);
+                        
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`; // Faint white lines
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
         function animateParticles() {
             requestAnimationFrame(animateParticles);
-            // Redraw with a slight fade effect to create trails
-            ctx.fillStyle = 'rgba(167, 139, 250, 0.05)'; // Using a light purple tint from the background
+            // Clear the canvas fully with a transparent/faint color for a clean look
+            ctx.fillStyle = 'rgba(167, 139, 250, 0.2)'; 
             ctx.fillRect(0, 0, W, H);
+            
+            connectParticles();
 
             particles.forEach(p => {
+                p.interact();
                 p.update();
                 p.draw();
             });
