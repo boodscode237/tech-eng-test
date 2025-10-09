@@ -1,396 +1,560 @@
+<!-- 
+    Technical English Reading Comprehension & Vocabulary Test
+    Focus: Live Group Voting, Session-based Votes, Kid-Friendly Design, Particles.
+    
+    New Logic: 
+    1. Clicking an option button increments its vote count instantly.
+    2. The main 'action-btn' is now used only for navigation (Start/Next Passage/Next Question).
+    3. A new 'lock-in-btn' appears on the question screen to submit the group's majority answer.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What is a Computer?</title>
-    <!-- Use Tailwind CSS for styling -->
+    <title>Awesome Website Quiz!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-        }
-        .section-separator {
+        /* Particle Canvas Styling */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 1px;
-            background-color: #e5e7eb;
-            margin: 4rem 0;
+            height: 100%;
+            z-index: -1; /* Keep it in the background */
         }
+        
+        /* Body/Background Update (Vibrant Gradient) */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            /* New vibrant gradient: Purple to Green */
+            background-image: linear-gradient(135deg, #a78bfa 0%, #34d399 100%); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow: hidden; 
+        }
+        
+        /* Glass Container (More opaque for readability) */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.95); /* Nearly solid white for text clarity */
+            backdrop-filter: blur(5px); 
+            -webkit-backdrop-filter: blur(5px);
+            border-radius: 30px; /* More rounded */
+            border: 3px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            padding: 2.5rem; 
+            max-width: 95%;
+            width: 750px; 
+            margin: auto;
+            z-index: 10;
+        }
+
+        /* Passage and Question Cards (Clean White for Text) */
+        .passage-box, .reference-text {
+            background: #ffffff; 
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #e5e7eb;
+            font-size: 1.25rem; /* Bigger text */
+            line-height: 1.6;
+            color: #1f2937;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Choice Buttons - Fun and Pop Effect */
+        .choice-button {
+            background: #ffffff;
+            color: #4b5563;
+            font-weight: 700; 
+            padding: 1.2rem 1.5rem;
+            border-radius: 15px; 
+            border: 3px solid #60a5fa; /* Blue border */
+            width: 100%;
+            text-align: left;
+            transition: all 0.1s;
+            box-shadow: 0 5px 0 0 #3b82f6; /* 3D effect */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .choice-button:hover:not(:disabled) {
+            background: #e0f2fe; /* Light blue on hover */
+            border-color: #3b82f6;
+            transform: translateY(2px); /* Push down */
+            box-shadow: 0 3px 0 0 #3b82f6; 
+        }
+        .choice-button:active:not(:disabled) {
+            transform: translateY(5px);
+            box-shadow: none; /* Press effect */
+        }
+
+        /* Action Buttons (Next/Lock In) - Vibrant Colors */
+        #action-btn {
+            background-image: linear-gradient(to right, #f87171, #ef4444) !important; /* Red/Pink gradient */
+            box-shadow: 0 5px 0 0 #dc2626;
+            font-size: 1.5rem;
+        }
+        #action-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+        #lock-in-btn {
+            background-color: #10b981 !important; /* Green */
+            box-shadow: 0 5px 0 0 #059669 !important;
+            font-size: 1.5rem !important;
+        }
+        #lock-in-btn:active {
+            transform: translateY(3px);
+            box-shadow: none !important;
+        }
+
+
+        /* Feedback Styling */
+        .correct-choice { 
+            background-color: #34d399 !important; /* Brighter Green */
+            color: white !important;
+            border-color: #059669 !important;
+            box-shadow: 0 5px 0 0 #059669 !important;
+            transform: none !important; /* Reset transforms */
+        } 
+        .wrong-choice { 
+            background-color: #f87171 !important; /* Brighter Red */
+            color: white !important; 
+            border-color: #dc2626 !important;
+            box-shadow: 0 5px 0 0 #dc2626 !important;
+            transform: none !important; /* Reset transforms */
+        }
+        .public-vote-star {
+            font-weight: 900; 
+            color: #fcd34d; /* Bright Yellow star */
+            font-size: 1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        .vote-details {
+            display: flex;
+            align-items: center;
+        }
+        .vote-count {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #6b7280;
+        }
+        .correct-choice .vote-count, .wrong-choice .vote-count {
+            color: white; /* Light text on colored buttons */
+        }
+        .score-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #e5e7eb;
+        }
+
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
+    <!-- Background Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
 
-    <!-- Header Section -->
-    <header class="text-center my-8 md:my-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">What is a Computer?</h1>
-        <p class="text-xl text-gray-600">Hardware & Software</p>
-    </header>
+    <div class="glass-container">
+        <h1 class="text-4xl font-black text-center text-gray-800 mb-6">💻 Awesome Website Quiz! 🚀</h1>
 
-    <!-- Main Container -->
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Main Content Area - Everything is rendered here -->
+        <div id="quiz-content">
+            <!-- Content will be injected by JavaScript -->
+        </div>
 
-        <!-- Introduction Section -->
-        <section class="text-center mb-12">
-            <p class="text-lg leading-relaxed">
-                Hello and welcome! This class is a fun way to learn about computers in English. We will talk about two big parts of a computer: <b>hardware</b> and <b>software</b>. Let's begin!
-            </p>
-        </section>
-
-        <!-- Hardware Section -->
-        <section id="hardware" class="mb-12">
-            <h2 class="text-3xl font-bold mb-4 text-center">Hardware: You Can Touch It</h2>
-            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
-                <div class="md:w-1/2">
-                    <p class="text-lg leading-relaxed">
-                        <b>Hardware</b> is the physical part of a computer. You can hold it, see it, and touch it. The mouse, keyboard, and monitor are all hardware. The parts inside, like the <b>CPU</b> (the computer's brain) and <b>motherboard</b> (the main board), are also hardware.
-                    </p>
-                    <p class="mt-4 text-gray-500">
-                        Think of hardware like the body of a robot!
-                    </p>
-                </div>
-                <div class="md:w-1/2 flex justify-center">
-                <img src="https://i.ytimg.com/vi/NpTSHIXA2Og/maxresdefault.jpg">
-
-                </div>
-            </div>
-        </section>
-
-        <div class="section-separator"></div>
-
-        <!-- Software Section -->
-        <section id="software" class="mb-12">
-            <h2 class="text-3xl font-bold mb-4 text-center">Software: The Programs</h2>
-            <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col md:flex-row-reverse items-center space-y-6 md:space-y-0 md:space-x-8">
-                <div class="md:w-1/2">
-                    <p class="text-lg leading-relaxed">
-                        <b>Software</b> is the programs and data that tell the hardware what to do. You cannot touch software. For example, your favorite game, a web browser, or the <b>Operating System (OS)</b> like Windows or macOS are all software. The OS is the most important program because it helps all other hardware and software to <b>work together</b>.
-                    </p>
-                    <p class="mt-4 text-gray-500">
-                        Think of software as the robot's brain and thoughts!
-                    </p>
-                </div>
-                <div class="md:w-1/2 flex justify-center">
-                    <img src="https://avatars.mds.yandex.net/i?id=85631841063b31e876974ceaab8e6f07_l-9264516-images-thumbs&n=13">
-                </div>
-            </div>
-        </section>
-
-        <div class="section-separator"></div>
-
-        <!-- Interactive Quiz Section -->
-        <section id="quiz" class="mb-12">
-            <h2 class="text-3xl font-bold mb-4 text-center">Final Quiz: Test Your Knowledge</h2>
-            <div class="bg-blue-100 rounded-xl shadow-lg p-6 md:p-8">
-                <div id="quiz-container">
-                    <h3 id="question-text" class="text-xl md:text-2xl font-bold text-center mb-6"></h3>
-                    <p id="hint-text" class="text-center text-sm italic text-gray-500 mb-4"></p>
-                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                    <div id="rationale-container" class="mt-4 hidden p-4 bg-gray-50 rounded-lg text-gray-700">
-                        <p id="rationale-text" class="text-base font-medium leading-relaxed"></p>
-                    </div>
-                </div>
-                <div class="flex justify-center mt-8">
-                    <button id="next-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-md transition-transform duration-300 transform hover:scale-105">
-                        Next Question
-                    </button>
-                </div>
-            </div>
-        </section>
-
+        <!-- Navigation/Action Button -->
+        <div class="mt-8">
+            <button id="action-btn" onclick="nextStep()" class="w-full py-3 text-xl font-bold text-white rounded-xl shadow-lg transition duration-300" style="display: none;">
+                Next
+            </button>
+        </div>
     </div>
 
     <script>
-        const quizQuestions = [
-            // --- 10 Easy Questions ---
-            {
-                question: "Which of these is hardware?",
-                hint: "Think about what you can touch.",
-                options: [
-                    { text: "A game program", isCorrect: false, rationale: "A game program is software; you cannot touch it." },
-                    { text: "The keyboard", isCorrect: true, rationale: "The keyboard is a physical part of the computer, so it is hardware." },
-                    { text: "The Windows operating system", isCorrect: false, rationale: "Windows is a program, which is software." },
-                    { text: "An app on your phone", isCorrect: false, rationale: "An app is software, you cannot touch it." }
-                ]
-            },
-            {
-                question: "Which of these is software?",
-                hint: "Think about what you cannot touch.",
-                options: [
-                    { text: "The computer's mouse", isCorrect: false, rationale: "The mouse is a physical device, so it is hardware." },
-                    { text: "The printer", isCorrect: false, rationale: "A printer is a physical device, so it is hardware." },
-                    { text: "A web browser", isCorrect: true, rationale: "A web browser is a program that tells the hardware what to do. You cannot touch it." },
-                    { text: "The monitor", isCorrect: false, rationale: "A monitor is a physical device, so it is hardware." }
-                ]
-            },
-            {
-                question: "What is the CPU?",
-                hint: "It's the computer's 'brain'.",
-                options: [
-                    { text: "A type of software", isCorrect: false, rationale: "The CPU is a physical chip inside the computer, so it is hardware." },
-                    { text: "The main screen", isCorrect: false, rationale: "The screen is a monitor, an output device." },
-                    { text: "The 'brain' of the computer", isCorrect: true, rationale: "The CPU performs all the calculations and actions for the computer, just like a brain." },
-                    { text: "A computer game", isCorrect: false, rationale: "A computer game is a type of software." }
-                ]
-            },
-            {
-                question: "Which device is used for input?",
-                hint: "Input sends information TO the computer.",
-                options: [
-                    { text: "A speaker", isCorrect: false, rationale: "A speaker is an output device because it gives you sound FROM the computer." },
-                    { text: "A printer", isCorrect: false, rationale: "A printer is an output device because it gives you a physical document FROM the computer." },
-                    { text: "A keyboard", isCorrect: true, rationale: "You use a keyboard to type words TO the computer, so it is an input device." },
-                    { text: "A monitor", isCorrect: false, rationale: "A monitor is an output device because it shows you a screen FROM the computer." }
-                ]
-            },
-            {
-                question: "Which device is used for <b>output</b>?",
-                hint: "Output gets information FROM the computer.",
-                options: [
-                    { text: "A microphone", isCorrect: false, rationale: "A microphone takes your voice and sends it TO the computer, so it is an input device." },
-                    { text: "A mouse", isCorrect: false, rationale: "A mouse takes your hand movements and sends them TO the computer, so it is an input device." },
-                    { text: "A monitor", isCorrect: true, rationale: "A monitor shows you images FROM the computer, so it is an output device." },
-                    { text: "A keyboard", isCorrect: false, rationale: "A keyboard takes your typing and sends it TO the computer, so it is an input device." }
-                ]
-            },
-            {
-                question: "What is the purpose of a storage drive?",
-                hint: "Think about saving files.",
-                options: [
-                    { text: "To make the computer faster right now", isCorrect: false, rationale: "RAM helps the computer work faster for current tasks." },
-                    { text: "To save files for a long time", isCorrect: true, rationale: "A storage drive saves your files, like photos and documents, even when the computer is off." },
-                    { text: "To print documents", isCorrect: false, rationale: "A printer is used to print documents." },
-                    { text: "To connect all parts together", isCorrect: false, rationale: "The motherboard connects all the parts together." }
-                ]
-            },
-            {
-                question: "What is the motherboard?",
-                hint: "It's the main board inside the computer that connects everything.",
-                options: [
-                    { text: "The brain of the computer", isCorrect: false, rationale: "The CPU is the brain of the computer." },
-                    { text: "A short-term memory chip", isCorrect: false, rationale: "This is a description of RAM." },
-                    { text: "A physical board that connects all the parts", isCorrect: true, rationale: "The motherboard is the main circuit board that connects all the other components." },
-                    { text: "The operating system", isCorrect: false, rationale: "The operating system is a program, which is software." }
-                ]
-            },
-            {
-                question: "What is the purpose of RAM?",
-                hint: "It's the computer's 'short memory'.",
-                options: [
-                    { text: "To save files forever", isCorrect: false, rationale: "The storage drive saves files forever." },
-                    { text: "To help the computer work fast <b>right now<b>", isCorrect: true, rationale: "RAM holds data for programs that are currently running, making the computer fast." },
-                    { text: "To connect the CPU to the monitor", isCorrect: false, rationale: "The motherboard connects the components." },
-                    { text: "To print out documents", isCorrect: false, rationale: "A printer prints documents." }
-                ]
-            },
-            {
-                question: "You turn off the computer. What happens to the information in RAM?",
-                hint: "RAM is short-term memory.",
-                options: [
-                    { text: "It is saved to the storage drive.", isCorrect: false, rationale: "You must save the file yourself for it to move to storage." },
-                    { text: "It disappears.", isCorrect: true, rationale: "RAM is temporary and loses all its data when the computer is turned off." },
-                    { text: "It stays until you turn on the computer again.", isCorrect: false, rationale: "The data in RAM is gone as soon as the power is off." },
-                    { text: "It is copied to the CPU.", isCorrect: false, rationale: "The CPU is the brain and processes information, it does not store it." }
-                ]
-            },
-            {
-                question: "The Operating System (OS) is a type of...",
-                hint: "Can you touch it?",
-                options: [
-                    { text: "Hardware", isCorrect: false, rationale: "The OS is a program, so it is software." },
-                    { text: "Physical device", isCorrect: false, rationale: "A physical device is hardware." },
-                    { text: "Storage drive", isCorrect: false, rationale: "A storage drive is hardware used to save files." },
-                    { text: "Software", isCorrect: true, rationale: "The OS is the main program that manages the computer, which makes it software." }
-                ]
-            },
-            // --- 4 Harder Questions ---
-            {
-                question: "Which statement best describes the difference between RAM and storage?",
-                hint: "Think about what happens to your work if you forget to click 'save' before the computer turns off.",
-                options: [
-                    {
-                        text: "RAM is the computer's temporary, short-term memory, and storage is the computer's long-term memory for saving files.",
-                        isCorrect: true,
-                        rationale: "RAM is used for active tasks and loses its data when the power is off. Storage is used to save data permanently, even when the computer is turned off."
-                    },
-                    {
-                        text: "RAM is a type of hardware, while storage is a type of software.",
-                        isCorrect: false,
-                        rationale: "Both RAM and storage devices (like a hard drive or SSD) are physical components, making them both types of hardware."
-                    },
-                    {
-                        text: "RAM is for saving files forever, and storage is for running programs right now.",
-                        isCorrect: false,
-                        rationale: "This statement has the functions reversed. RAM holds data for programs currently in use, and storage (like a hard drive) saves files permanently."
-                    },
-                    {
-                        text: "RAM is located outside the computer, and storage is located inside the computer.",
-                        isCorrect: false,
-                        rationale: "Both RAM and most common storage devices are located inside the computer tower or laptop."
-                    }
-                ]
-            },
-            {
-                question: "If the motherboard is broken, why would a computer be unable to start?",
-                hint: "Consider the motherboard's role as a connection point for all the other parts.",
-                options: [
-                    {
-                        text: "All other components, like the CPU and RAM, need the motherboard to connect and communicate.",
-                        isCorrect: true,
-                        rationale: "The motherboard is the central circuit board that provides the physical and electrical connections for all other hardware components to work together."
-                    },
-                    {
-                        text: "The motherboard is the only part that can touch software.",
-                        isCorrect: false,
-                        rationale: "The motherboard is a piece of hardware and cannot touch software. It is the programs that give instructions to the hardware."
-                    },
-                    {
-                        text: "The motherboard has its own operating system that is needed to turn on the computer.",
-                        isCorrect: false,
-                        rationale: "The operating system is software and is typically stored on a storage device, not the motherboard itself."
-                    },
-                    {
-                        text: "The motherboard is the brain of the computer and tells everything what to do.",
-                        isCorrect: false,
-                        rationale: "The CPU is the brain of the computer. The motherboard is like the nervous system that connects the parts."
-                    }
-                ]
-            },
-            {
-                question: "A computer is like a car. In this analogy, if the car’s engine is the CPU, then what would the car’s dashboard and gauges represent?",
-                hint: "Think about whether a dashboard gives information to you or takes information from you.",
-                options: [
-                    {
-                        text: "An output device, because they show you information.",
-                        isCorrect: true,
-                        rationale: "The dashboard and gauges are an output device. They take information from the car's engine and systems and display it for you to see."
-                    },
-                    {
-                        text: "The motherboard, because they connect everything.",
-                        isCorrect: false,
-                        rationale: "The motherboard connects the components, while the dashboard and gauges are a way for you to see information from the car."
-                    },
-                    {
-                        text: "The storage drive, because they hold information.",
-                        isCorrect: false,
-                        rationale: "While the gauges hold information, they are not a long-term storage solution. They are a display."
-                    },
-                    {
-                        text: "An input device, because you use them to drive.",
-                        isCorrect: false,
-                        rationale: "Input devices for a car would be the steering wheel and pedals. The gauges are for viewing information, not giving it to the car."
-                    }
-                ]
-            },
-            {
-                question: "In a computer, what is the correct relationship between the CPU, the OS, and an application like a game?",
-                hint: "Think about the hierarchy of a computer system, from the most general program to the specific task.",
-                options: [
-                    {
-                        text: "The OS (software) runs on the CPU (hardware), and the game (software) runs with the help of the OS.",
-                        isCorrect: true,
-                        rationale: "The operating system is the main program that manages the CPU and other hardware, and all other applications must use the OS to function."
-                    },
-                    {
-                        text: "The CPU (hardware) gives instructions to the OS (software), which gives instructions to the game (software).",
-                        isCorrect: false,
-                        rationale: "The relationship is the other way around. The software (OS and game) gives instructions to the hardware (CPU)."
-                    },
-                    {
-                        text: "The game (software) runs directly on the CPU (hardware) without the help of the OS (software).",
-                        isCorrect: false,
-                        rationale: "The operating system is necessary for the game to be able to communicate with and use the hardware resources."
-                    },
-                    {
-                        text: "All three are hardware components that work together.",
-                        isCorrect: false,
-                        rationale: "Both the OS and the game are software, while the CPU is hardware."
-                    }
-                ]
-            }
+        // --- DATA SETUP ---
+        const passages = [
+            { id: 1, title: "Passage 1: The Browser and the Homepage", text: "Every day, Maria wants to watch a video. First, she opens her browser program. This is the application she uses for the internet. She looks at the top of the screen where the Address Bar is. In this space, she must type the full URL of the website. For example, she types `www.videozone.com`. After she presses 'Enter,' the website starts to load. The first screen she sees is the Homepage. This is the main page where she can start her search. Maria always starts here because it is fast. When the whole website loads, she is ready to begin." },
+            { id: 2, title: "Passage 2: Finding Information", text: "Juan needs to find a recipe for pizza. He types the word 'pizza' into the Search Bar. He clicks the 'Search' button. The page loads quickly, but it is very long! Juan does not see the recipe immediately, so he must scroll down the page with his mouse wheel. He keeps scrolling and then sees many small pictures. These are icons for different videos and recipes. He sees one that looks delicious. He clicks the link next to the picture. He now opens a new page that has the recipe. The new page loads, and he is ready to cook." },
+            { id: 3, title: "Passage 3: Giving Instructions", text: "My name is Alex. I am a web developer. I give simple instructions to my computer. To start, I always say: \"Open the browser!\" When the page is on the screen, I see a small picture of a pencil. This is the 'Edit' icon. I need to change some text, so I tell the user: \"Click the pencil icon to start editing.\" If the user makes a mistake, I shout, \"Do not click the red 'Delete' button!\" I often say, \"Scroll up to see the menu.\" After all the work is finished, the final command is: \"Close the page and the browser.\"" },
+            { id: 4, title: "Passage 4: Website Actions in Detail", text: "When David uses the internet, he performs many actions. He sometimes types a long URL into the Address Bar, but sometimes he uses the Search Bar. When he types a word, the search results appear. Every result is a link. He clicks the best link. The page usually loads fast. If he is on a long page, he always scrolls down with his finger or mouse. His favorite game website has a huge green button to start the game. David clicks that button and the game loads. He never forgets to close his browser when he finishes playing." }
         ];
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        const totalQuestions = quizQuestions.length;
+        const allQuestions = [
+            { id: 1, q: "1. What is the name of the program Maria opens first?", options: ["The Link", "Her browser", "The Address Bar", "The Homepage"], correct: 1, passage: 1 },
+            { id: 2, q: "2. Where on the screen is the Address Bar?", options: ["At the bottom", "In the center", "At the top of the screen", "Next to the Homepage"], correct: 2, passage: 1 },
+            { id: 3, q: "3. What does Maria type into the Address Bar?", options: ["A game title", "A password", "The full URL", "Her name"], correct: 2, passage: 1 },
+            { id: 4, q: "4. What is the Homepage?", options: ["The Address Bar", "The last page she visits", "The first, main page of a website", "The Browser application"], correct: 2, passage: 1 },
+            { id: 5, q: "5. Why does Maria always start on the Homepage?", options: ["Because it is new", "Because it is fast", "Because it has videos", "Because she must scroll"], correct: 1, passage: 1 },
+            { id: 6, q: "6. Complete the sentence correctly: The website _________ fast. (Load)", options: ["load", "loads", "is load", "loading"], correct: 1, passage: 1 },
+            { id: 7, q: "7. Which word is the full address of a website (abbreviation)?", options: ["CPU", "RAM", "URL", "ICON"], correct: 2, passage: 1 },
+            { id: 8, q: "8. Find the verb in the text that means to put information into a computer using a keyboard.", options: ["open", "load", "scroll", "type"], correct: 3, passage: 1 },
+            { id: 9, q: "9. If Maria is ready to start, has the website finished the action of loading?", options: ["No, it is still loading.", "Yes, it has loaded.", "Maybe, she needs to click.", "She closes the browser."], correct: 1, passage: 1 },
+            { id: 10, q: "10. True or False: Maria's browser is an application.", options: ["True", "False", "Not mentioned", "Only for games"], correct: 0, passage: 1 },
+            { id: 11, q: "11. What word does Juan type into the Search Bar?", options: ["Recipe", "Pizza", "Cook", "Juan"], correct: 1, passage: 2 },
+            { id: 12, q: "12. Why does Juan need to scroll down the page?", options: ["The button is big.", "The page is very long.", "To see the Address Bar.", "To close the browser."], correct: 1, passage: 2 },
+            { id: 13, q: "13. What is next to the delicious picture that Juan clicks?", options: ["An icon", "A button", "A search bar", "A link"], correct: 3, passage: 2 },
+            { id: 14, q: "14. What does the word link mean in this passage?", options: ["A picture", "A website address", "Text that opens a new page", "The search bar"], correct: 2, passage: 2 },
+            { id: 15, q: "15. What are the small pictures for?", options: ["Addresses and URLs", "Recipes and videos", "Buttons and scroll bars", "Only for pizza"], correct: 1, passage: 2 },
+            { id: 16, q: "16. Correct the verb form: Juan load the new page. (Load)", options: ["load", "loading", "loads", "loaded"], correct: 2, passage: 2 },
+            { id: 17, q: "17. Which verb means to move the page up or down?", options: ["type", "open", "scroll", "load"], correct: 2, passage: 2 },
+            { id: 18, q: "18. True or False: The page loaded quickly.", options: ["True", "False, it was slow.", "False, Juan scrolled a lot.", "Not mentioned"], correct: 0, passage: 2 },
+            { id: 19, q: "19. What does Juan click to start the search after typing?", options: ["The new page", "The homepage", "The 'Search' button", "The URL"], correct: 2, passage: 2 },
+            { id: 20, q: "20. What is the final action Juan does before cooking?", options: ["He closes the page.", "He scrolls up.", "He types the recipe.", "The new page loads."], correct: 3, passage: 2 },
+            { id: 21, q: "21. What is Alex's job?", options: ["A cook", "A teacher", "A web developer", "A driver"], correct: 2, passage: 3 },
+            { id: 22, q: "22. What is the first instruction Alex gives to his computer?", options: ["Type the URL!", "Click the icon!", "Open the browser!", "Close the page!"], correct: 2, passage: 3 },
+            { id: 23, q: "23. What does the pencil icon mean?", options: ["Save", "Delete", "Edit", "Open"], correct: 2, passage: 3 },
+            { id: 24, q: "24. What color is the button Alex says Do not click?", options: ["Blue", "Green", "Yellow", "Red"], correct: 3, passage: 3 },
+            { id: 25, q: "25. What is the final command to finish the work?", options: ["Close the page and the browser.", "Scroll up!", "Type the address!", "Click the pencil icon."], correct: 0, passage: 3 },
+            { id: 26, q: "26. Identify the verb form used for the positive instructions (e.g., Click the icon!).", options: ["Past Tense", "Base Verb (Imperative)", "Future Tense", "Verb + -s"], correct: 1, passage: 3 },
+            { id: 27, q: "27. What is the name for the small picture used to represent 'Edit'?", options: ["A button", "An icon", "A link", "A bar"], correct: 1, passage: 3 },
+            { id: 28, q: "28. Which is the correct negative instruction?", options: ["Do not scrolls up!", "Does not scroll up!", "Do not scroll up!", "Not scroll up!"], correct: 2, passage: 3 },
+            { id: 29, q: "29. If the user wants to see the menu, what instruction does Alex give?", options: ["Type 'Menu'!", "Scroll up!", "Click the delete button!", "Load the page!"], correct: 1, passage: 3 },
+            { id: 30, q: "30. What kind of element is the 'Delete' red?", options: ["An icon", "A link", "A button", "An address"], correct: 2, passage: 3 },
+            { id: 31, q: "31. What are the two ways David finds a website?", options: ["Address Bar and Scroll Bar", "Search Bar and Button", "Address Bar and Search Bar", "URL and Homepage"], correct: 2, passage: 4 },
+            { id: 32, q: "32. What is every search result called in the text?", options: ["A button", "A link", "An icon", "A browser"], correct: 1, passage: 4 },
+            { id: 33, q: "33. What color and size is the game button?", options: ["Huge and red", "Small and blue", "Huge and green", "Small and white"], correct: 2, passage: 4 },
+            { id: 34, q: "34. True or False: David uses his keyboard to scroll down a long page.", options: ["True, he types a code.", "False, he uses his finger or mouse.", "True, he clicks the keyboard.", "Not mentioned in the text."], correct: 1, passage: 4 },
+            { id: 35, q: "35. What does David always remember to do when he finishes playing?", options: ["To scroll up.", "To type his name.", "To close his browser.", "To open a new page."], correct: 2, passage: 4 },
+            { id: 36, q: "36. Complete the sentence: David always scrolls down with his finger or his _________.", options: ["eye", "keyboard", "mouse", "link"], correct: 2, passage: 4 },
+            { id: 37, q: "37. Which two verbs in the passage use the 'He/She/It' -s rule?", options: ["type and click", "open and close", "scrolls and clicks", "load and type"], correct: 2, passage: 4 },
+            { id: 38, q: "38. What is the full address of a website (abbreviation)?", options: ["GPS", "HTTP", "URL", "PDF"], correct: 2, passage: 4 },
+            { id: 39, q: "39. What action happens after David clicks the button?", options: ["The URL types.", "The browser opens.", "The game loads.", "The link closes."], correct: 2, passage: 4 },
+            { id: 40, q: "40. The word types is a verb. What is the base form of this verb?", options: ["type", "typing", "typed", "typess"], correct: 0, passage: 4 }
+        ];
 
-        const questionText = document.getElementById('question-text');
-        const hintText = document.getElementById('hint-text');
-        const optionsContainer = document.getElementById('options-container');
-        const rationaleContainer = document.getElementById('rationale-container');
-        const rationaleText = document.getElementById('rationale-text');
-        const nextButton = document.getElementById('next-button');
+        // --- STATE MANAGEMENT ---
+        let state = {
+            currentPassageIndex: 0,
+            currentQuestionIndex: -1,
+            // userAnswers: { qId: selectedOptionIndex } - tracks the FINAL group choice after Lock-In
+            userAnswers: {}, 
+            // localVotes: { qId: { 0: count, 1: count, ... } } - live, local vote counter
+            localVotes: {}, 
+            isFinished: false
+        };
 
-        // Function to render the current question
-        function showQuestion() {
-            const currentQuestion = quizQuestions[currentQuestionIndex];
-            questionText.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}: ${currentQuestion.question}`;
-            hintText.textContent = currentQuestion.hint;
-            optionsContainer.innerHTML = '';
-            rationaleContainer.classList.add('hidden');
-            nextButton.style.display = 'none';
+        const quizContent = document.getElementById('quiz-content');
+        const actionButton = document.getElementById('action-btn');
 
-            currentQuestion.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.textContent = option.text;
-                button.classList.add('bg-white', 'hover:bg-gray-100', 'text-gray-800', 'font-semibold', 'py-4', 'px-6', 'rounded-lg', 'shadow-md', 'transition-all', 'duration-200', 'hover:scale-105', 'w-full', 'text-left');
+        // Initialize localVotes structure
+        allQuestions.forEach(q => {
+            state.localVotes[q.id] = { 0: 0, 1: 0, 2: 0, 3: 0 };
+        });
 
-                button.onclick = () => checkAnswer(index, button, option.isCorrect, option.rationale);
-                optionsContainer.appendChild(button);
-            });
+        // --- CORE QUIZ FUNCTIONS ---
+
+        function getQuestionsForCurrentPassage() {
+            const passageId = state.currentPassageIndex + 1;
+            return allQuestions.filter(q => q.passage === passageId);
         }
 
-        // Function to check the selected answer
-        function checkAnswer(selectedIndex, button, isCorrect, rationale) {
-            // Disable all buttons after an answer is chosen
-            Array.from(optionsContainer.children).forEach(btn => {
-                btn.disabled = true;
-                btn.classList.add('cursor-not-allowed', 'opacity-70');
-                if (btn === button) {
-                    btn.classList.remove('hover:bg-gray-100', 'hover:scale-105');
+        /**
+         * Handles a single student's vote. This function allows multiple clicks.
+         */
+        function handleAnswer(qId, selectedIndex) {
+            // Check if the answer has already been locked in
+            if (state.userAnswers[qId] !== undefined) { 
+                return;
+            }
+
+            // Increment vote count and re-render immediately
+            state.localVotes[qId][selectedIndex]++;
+            render(); 
+        }
+
+        /**
+         * Locks in the group's answer (the option with the most votes) and reveals grading.
+         */
+        function lockInVote(qId) {
+            const currentQVotes = state.localVotes[qId];
+            let maxVoteCount = -1;
+            let maxVoteIndex = -1;
+
+            // Find the majority choice (Local Choice)
+            for (let i = 0; i < 4; i++) {
+                const count = currentQVotes[i] || 0;
+                if (count > maxVoteCount) {
+                    maxVoteCount = count;
+                    maxVoteIndex = i;
+                }
+            }
+
+            // Record the majority choice as the group's final answer
+            state.userAnswers[qId] = maxVoteIndex;
+
+            // Now re-render to show the correct/wrong feedback based on the majority choice
+            render();
+        }
+
+
+        function render() {
+            if (state.isFinished) {
+                showFinalScore();
+                return;
+            }
+
+            const currentPassage = passages[state.currentPassageIndex];
+
+            if (state.currentQuestionIndex === -1) {
+                // RENDER PASSAGE VIEW
+                quizContent.innerHTML = `
+                    <h2 class="text-3xl font-bold text-gray-700 mb-4">${currentPassage.title}</h2>
+                    <div class="passage-box italic text-gray-600">
+                        ${currentPassage.text}
+                    </div>
+                    <p class="text-center text-lg font-medium text-gray-600 mt-4">This section has questions ${currentPassage.id * 10 - 9} to ${currentPassage.id * 10}.</p>
+                `;
+                actionButton.style.display = 'block';
+                actionButton.textContent = `Start Questions for ${currentPassage.title}`;
+            } else {
+                // RENDER QUESTION VIEW
+                const passageQuestions = getQuestionsForCurrentPassage();
+                const currentQ = passageQuestions[state.currentQuestionIndex];
+                
+                if (!currentQ) {
+                    nextStep();
+                    return;
+                }
+                
+                const qId = currentQ.id;
+                const currentQVotes = state.localVotes[qId] || { 0: 0, 1: 0, 2: 0, 3: 0 };
+                let maxVoteCount = -1;
+                let maxVoteIndex = -1; // The index of the group's majority vote
+
+                // Calculate max vote and public choice index
+                for (let i = 0; i < 4; i++) {
+                    const count = currentQVotes[i] || 0;
+                    if (count > maxVoteCount) {
+                        maxVoteCount = count;
+                        maxVoteIndex = i;
+                    }
+                }
+
+                const isVoted = state.userAnswers[qId] !== undefined;
+                const groupAnswerIndex = state.userAnswers[qId];
+                
+                let optionsHtml = currentQ.options.map((option, index) => {
+                    const isCorrect = currentQ.correct === index;
+                    const isMajorityChoice = index === maxVoteIndex;
+                    
+                    let classes = 'choice-button mb-3';
+                    let starHtml = '';
+                    const count = currentQVotes[index] || 0;
+                    let voteText = `<span class="vote-count">(${count} votes)</span>`;
+                    
+                    if (isVoted) {
+                        // After Lock-In: Show Grading
+                        classes += ' pointer-events-none '; 
+                        
+                        if (isCorrect) {
+                            classes += ' correct-choice';
+                        } else if (index === groupAnswerIndex && !isCorrect) {
+                            // Highlight the group's incorrect choice in red
+                            classes += ' wrong-choice';
+                        }
+
+                        // Show star on the group's official, locked-in answer
+                        if (index === groupAnswerIndex) {
+                            starHtml = `<span class="public-vote-star"> (${isCorrect ? 'Correct Group Answer' : 'Group Answer'})</span>`;
+                        }
+
+                    } else {
+                        // Before Lock-In: Show live vote counts
+                        // Highlight the current majority option with a star
+                        if (isMajorityChoice && maxVoteCount > 0) {
+                            // The requested update for "CHOICE" is here:
+                            starHtml = `<span class="public-vote-star"> (CHOICE)</span>`;
+                        }
+                    }
+
+                    return `
+                        <button 
+                            class="${classes}" 
+                            data-option-index="${index}" 
+                            onclick="handleAnswer(${qId}, ${index})"
+                            ${isVoted ? 'disabled' : ''}
+                        >
+                            <span>${option}</span>
+                            <span class="vote-details">
+                                ${voteText} ${starHtml}
+                            </span>
+                        </button>
+                    `;
+                }).join('');
+
+
+                // Control buttons based on state
+                let questionControlsHtml = '';
+                if (isVoted) {
+                    // Answer is locked in, show Next button
+                    actionButton.style.display = 'block';
+                    actionButton.textContent = 'Next Question';
+                } else {
+                    // Answer is not locked in, show Lock-In button
+                    actionButton.style.display = 'none';
+                    questionControlsHtml = `
+                        <div class="mt-8">
+                            <button id="lock-in-btn" onclick="lockInVote(${qId})" class="w-full py-3 text-lg font-bold text-white rounded-xl shadow-lg transition duration-300 bg-green-600 hover:bg-green-700">
+                                LOCK IN GROUP VOTE!
+                            </button>
+                            <p class="text-sm text-center text-gray-500 mt-2 font-medium">Click an option repeatedly to count student votes first, then click the Lock In button.</p>
+                        </div>
+                    `;
+                }
+
+
+                quizContent.innerHTML = `
+                    <!-- Reference Passage -->
+                    <h3 class="text-2xl font-bold text-gray-700 mb-3">Passage Reference:</h3>
+                    <div class="reference-text italic text-gray-600">
+                        ${currentPassage.text}
+                    </div>
+
+                    <!-- Question and Options -->
+                    <div class="mb-4 text-center text-lg font-bold text-gray-600">Question ${currentQ.id} of 40</div>
+                    <div class="passage-box p-4">
+                        <p class="text-2xl font-extrabold mb-4">${currentQ.q}</p>
+                        <div class="space-y-4">
+                            ${optionsHtml}
+                        </div>
+                        ${questionControlsHtml}
+                    </div>
+                `;
+            }
+        }
+
+        function nextStep() {
+            const passageQuestions = getQuestionsForCurrentPassage();
+            
+            if (state.currentQuestionIndex === -1) {
+                state.currentQuestionIndex = 0; 
+            } 
+            else if (state.currentQuestionIndex < passageQuestions.length - 1) {
+                state.currentQuestionIndex++; 
+            } 
+            else if (state.currentPassageIndex < passages.length - 1) {
+                state.currentPassageIndex++; 
+                state.currentQuestionIndex = -1; 
+            } 
+            else {
+                state.isFinished = true;
+            }
+
+            render();
+            // Scroll to the top of the glass container for smooth transition
+            document.querySelector('.glass-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showFinalScore() {
+            let score = 0;
+            allQuestions.forEach(q => {
+                if (state.userAnswers.hasOwnProperty(q.id) && state.userAnswers[q.id] === q.correct) {
+                    score++;
                 }
             });
 
-            if (isCorrect) {
-                score++;
-                button.classList.remove('bg-white', 'text-gray-800');
-                button.classList.add('bg-green-400', 'text-white');
-            } else {
-                button.classList.remove('bg-white', 'text-gray-800');
-                button.classList.add('bg-red-400', 'text-white');
-            }
-            
-            // Show rationale and 'Next' button
-            rationaleText.textContent = rationale;
-            rationaleContainer.classList.remove('hidden');
-            nextButton.style.display = 'block';
+            quizContent.innerHTML = `
+                <div class="score-box p-8 rounded-3xl text-center shadow-2xl">
+                    <h2 class="text-4xl font-black text-green-600 mb-4">Quiz Complete! 🎉</h2>
+                    <p class="text-6xl font-black text-indigo-700 mb-8">${score} / 40</p>
+                    <p class="text-2xl text-gray-700 font-semibold">The group's final score is ${score} out of 40!</p>
+                    <p class="text-lg text-gray-500 mt-4">Great teamwork! Reload the page to start a new quiz session.</p>
+                </div>
+            `;
+            actionButton.style.display = 'none'; 
+        }
+        
+        
+        // --- PARTICLE EFFECT LOGIC (Simple JS Canvas) ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        var W, H; // FIXED: Changed 'let' to 'var' to prevent the redeclaration error
+
+        function resizeCanvas() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
         }
 
-        // Event listener for the next button
-        nextButton.addEventListener('click', () => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizQuestions.length) {
-                showQuestion();
-            } else {
-                // End of quiz
-                questionText.textContent = "Quiz Complete!";
-                hintText.textContent = "";
-                optionsContainer.innerHTML = '';
-                rationaleContainer.classList.add('hidden');
-                nextButton.style.display = 'none';
-
-                // Display final score
-                const finalMessage = document.createElement('h3');
-                finalMessage.classList.add('text-3xl', 'font-bold', 'text-center', 'text-blue-600', 'mt-8');
-                finalMessage.textContent = `Your final score is: ${score} out of ${totalQuestions}`;
-                document.getElementById('quiz-container').appendChild(finalMessage);
+        class Particle {
+            constructor(x, y) {
+                this.x = x || Math.random() * W;
+                this.y = y || Math.random() * H;
+                this.radius = 2 + Math.random() * 4;
+                // Light, playful colors
+                const colors = ['#fde047', '#34d399', '#f97316', '#a78bfa'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = 0.4 + Math.random() * 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
             }
+
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Simple wrap around the screen
+                if (this.x < 0) this.x = W;
+                if (this.x > W) this.x = 0;
+                if (this.y < 0) this.y = H;
+                if (this.y > H) this.y = 0;
+
+                // Slight random movement for a 'floating' feel
+                this.x += Math.random() * 0.2 - 0.1;
+                this.y += Math.random() * 0.2 - 0.1;
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            // Adjust density for screen size
+            const particleCount = Math.floor((W * H) / 20000); 
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            // Redraw with a slight fade effect to create trails
+            ctx.fillStyle = 'rgba(167, 139, 250, 0.05)'; // Using a light purple tint from the background
+            ctx.fillRect(0, 0, W, H);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles(); 
         });
 
-        // Start the quiz when the page loads
-        window.onload = showQuestion;
+        // Initial setup
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+        
+        // Initialize the quiz
+        window.onload = render;
     </script>
-
 </body>
 </html>
