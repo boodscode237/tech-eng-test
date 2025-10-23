@@ -1,591 +1,575 @@
-<!-- 
-    Technical English Reading Comprehension & Vocabulary Test
-    Focus: Live Group Voting, Session-based Votes, Kid-Friendly Design, Interactive Particles.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awesome Website Quiz!</title>
+    <title>A2 Technical English Quizzes</title>
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Particle Canvas Styling */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Keep it in the background */
+        /* Custom styles for a cleaner UI/UX */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; 
         }
-        
-        /* Body/Background Update (Vibrant Gradient) */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            /* New vibrant gradient: Purple to Green */
-            background-image: linear-gradient(135deg, #a78bfa 0%, #34d399 100%); 
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; 
-            min-height: 100vh;
-            padding: 20px; 
-            position: relative;
-            overflow-x: hidden; 
-            overflow-y: auto; 
+        .container {
+            max-width: 900px;
         }
-        
-        /* Glass Container (More opaque for readability) */
-        .glass-container {
-            background: rgba(255, 255, 255, 0.95); /* Nearly solid white for text clarity */
-            backdrop-filter: blur(5px); 
-            -webkit-backdrop-filter: blur(5px);
-            border-radius: 30px; /* More rounded */
-            border: 3px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Stronger shadow */
-            padding: 2.5rem; 
-            max-width: 95%;
-            width: 750px; 
-            margin-top: 20px; 
-            margin-bottom: 20px;
-            z-index: 10;
-        }
-
-        /* Passage and Question Cards (Clean White for Text) */
-        .passage-box, .reference-text {
-            background: #ffffff; 
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 2px solid #e5e7eb;
-            font-size: 1.25rem; /* Bigger text */
-            line-height: 1.6;
-            color: #1f2937;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Choice Buttons - Fun and Pop Effect */
-        .choice-button {
-            background: #ffffff;
-            color: #4b5563;
-            font-weight: 700; 
-            padding: 1.2rem 1.5rem;
-            border-radius: 15px; 
-            border: 3px solid #60a5fa; /* Blue border */
-            width: 100%;
-            text-align: left;
-            transition: all 0.1s;
-            box-shadow: 0 5px 0 0 #3b82f6; /* 3D effect */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .question-label {
+            transition: all 0.2s ease-in-out;
             cursor: pointer;
-            font-size: 1.1rem;
         }
-        .choice-button:hover:not(:disabled) {
-            background: #e0f2fe; /* Light blue on hover */
-            border-color: #3b82f6;
-            transform: translateY(2px); /* Push down */
-            box-shadow: 0 3px 0 0 #3b82f6; 
+        .question-label:hover {
+            background-color: #f1f5f9; 
         }
-        .choice-button:active:not(:disabled) {
-            transform: translateY(5px);
-            box-shadow: none; /* Press effect */
+        /* Style for radio buttons */
+        input[type="radio"] {
+            margin-right: 8px;
+            accent-color: #3b82f6; 
         }
-
-        /* Action Buttons (Next/Lock In) - Vibrant Colors */
-        #action-btn {
-            background-image: linear-gradient(to right, #f87171, #ef4444) !important; /* Red/Pink gradient */
-            box-shadow: 0 5px 0 0 #dc2626;
-            font-size: 1.5rem;
-        }
-        #action-btn:active {
-            transform: translateY(3px);
-            box-shadow: none;
-        }
-        #lock-in-btn {
-            background-color: #10b981 !important; /* Green */
-            box-shadow: 0 5px 0 0 #059669 !important;
-            font-size: 1.5rem !important;
-        }
-        #lock-in-btn:active {
-            transform: translateY(3px);
-            box-shadow: none !important;
-        }
-
-
-        /* Feedback Styling */
-        .correct-choice { 
-            background-color: #34d399 !important; /* Brighter Green */
-            color: white !important;
-            border-color: #059669 !important;
-            box-shadow: 0 5px 0 0 #059669 !important;
-            transform: none !important; /* Reset transforms */
-        } 
-        .wrong-choice { 
-            background-color: #f87171 !important; /* Brighter Red */
-            color: white !important; 
-            border-color: #dc2626 !important;
-            box-shadow: 0 5px 0 0 #dc2626 !important;
-            transform: none !important; /* Reset transforms */
-        }
-        .public-vote-star {
-            font-weight: 900; 
-            color: #fcd34d; /* Bright Yellow star */
-            font-size: 1rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-        }
-        .vote-details {
-            display: flex;
-            align-items: center;
-        }
-        .vote-count {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #6b7280;
-        }
-        .correct-choice .vote-count, .wrong-choice .vote-count {
-            color: white; /* Light text on colored buttons */
-        }
-        .score-box {
-            background: rgba(255, 255, 255, 0.9);
-            border: 3px solid #e5e7eb;
-        }
-
     </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-green': '#10b981',
+                        'secondary-blue': '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-    <!-- Background Particle Canvas -->
-    <canvas id="particle-canvas"></canvas>
+<body class="p-4 sm:p-8">
 
-    <div class="glass-container">
-        <h1 class="text-4xl font-black text-center text-gray-800 mb-6">💻 Awesome Website Quiz! 🚀</h1>
+    <div class="container mx-auto">
+        <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-lg">
+            <h1 class="text-4xl font-extrabold text-secondary-blue">A2 Technical English Quizzes</h1>
+            <p class="text-gray-600 mt-2 text-lg">40 Questions | Collaborative Voting (Simulated)</p>
+            
+            <div class="mt-4">
+                <button onclick="window.resetAllData()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold text-sm rounded-lg shadow-md transition duration-200">
+                    Reset All Votes & Progress
+                </button>
+                <p class="text-xs text-gray-500 mt-1">Click here to clear all saved votes and progress (to start with 0 votes).</p>
+            </div>
+        </header>
 
-        <!-- Main Content Area - Everything is rendered here -->
-        <div id="quiz-content">
-            <!-- Content will be injected by JavaScript -->
+        <div id="quiz-container">
+            <!-- Dynamic quiz content will be rendered here -->
         </div>
-
-        <!-- Navigation/Action Button -->
-        <div class="mt-8">
-            <button id="action-btn" onclick="nextStep()" class="w-full py-3 text-xl font-bold text-white rounded-xl shadow-lg transition duration-300" style="display: none;">
-                Next
-            </button>
-        </div>
+        
+        <footer class="text-center mt-10 p-4 text-gray-500 text-sm">
+            <p>The blue border highlights the group's majority vote (your choice + simulated users).</p>
+        </footer>
     </div>
 
     <script>
-        // --- DATA SETUP (Omitted for brevity, remains the same) ---
-        const passages = [
-            { id: 1, title: "Passage 1: The Browser and the Homepage", text: "Every day, Maria wants to watch a video. First, she opens her browser program. This is the application she uses for the internet. She looks at the top of the screen where the Address Bar is. In this space, she must type the full URL of the website. For example, she types `www.videozone.com`. After she presses 'Enter,' the website starts to load. The first screen she sees is the Homepage. This is the main page where she can start her search. Maria always starts here because it is fast. When the whole website loads, she is ready to begin." },
-            { id: 2, title: "Passage 2: Finding Information", text: "Juan needs to find a recipe for pizza. He types the word 'pizza' into the Search Bar. He clicks the 'Search' button. The page loads quickly, but it is very long! Juan does not see the recipe immediately, so he must scroll down the page with his mouse wheel. He keeps scrolling and then sees many small pictures. These are icons for different videos and recipes. He sees one that looks delicious. He clicks the link next to the picture. He now opens a new page that has the recipe. The new page loads, and he is ready to cook." },
-            { id: 3, title: "Passage 3: Giving Instructions", text: "My name is Alex. I am a web developer. I give simple instructions to my computer. To start, I always say: \"Open the browser!\" When the page is on the screen, I see a small picture of a pencil. This is the 'Edit' icon. I need to change some text, so I tell the user: \"Click the pencil icon to start editing.\" If the user makes a mistake, I shout, \"Do not click the red 'Delete' button!\" I often say, \"Scroll up to see the menu.\" After all the work is finished, the final command is: \"Close the page and the browser.\"" },
-            { id: 4, title: "Passage 4: Website Actions in Detail", text: "When David uses the internet, he performs many actions. He sometimes types a long URL into the Address Bar, but sometimes he uses the Search Bar. When he types a word, the search results appear. Every result is a link. He clicks the best link. The page usually loads fast. If he is on a long page, he always scrolls down with his finger or mouse. His favorite game website has a huge green button to start the game. David clicks that button and the game loads. He never forgets to close his browser when he finishes playing." }
+        // --- CONSTANTS ---
+        const USER_ID = 'my-current-user'; // Unique ID for current user's vote
+        const SIMULATED_USERS = ['sim1', 'sim2', 'sim3', 'sim4', 'sim5', 'sim6', 'sim7', 'sim8'];
+        const TOTAL_VOTERS = 1 + SIMULATED_USERS.length; // 9 total votes (1 real + 8 simulated)
+        
+        // --- QUIZ DATA ---
+        const tests = [
+            // --- TEST 1: Websites and Technical Vocabulary ---
+            {
+                id: 'test1',
+                title: 'Test 1: Websites and Technical Vocabulary 🌐',
+                description: 'Read the text and answer the questions one by one.',
+                text: 
+                    "A website is like a digital house or place on the Internet. It has many rooms, which we call pages. To visit this digital house, you need a special program called a **browser**, like Google Chrome or Apple Safari. When you first arrive, the main door is the **Homepage**, which is the first, main page you see.\n\n" +
+                    "Every website has a unique location called a **URL** (Uniform Resource Locator), which is its full address. You type this address into the **Address Bar** in your browser. To interact with the page, you **click** your mouse or **tap** your screen to select things or buttons. If you want to put information into a search box, you **type** your words. When you want to move the page up or down to see more content, you **scroll**. When you select a button or an **icon** (a small picture that links to something), the page may need time to **load**. Sometimes, the connection is slow, and the page loads slowly.",
+                questions: [
+                    { q: "What is a website like?", options: ["A special computer program.", "A digital house or place on the Internet.", "A small picture that links to something."], correct: 1 },
+                    { q: "What is a BROWSER?", options: ["The first, main page of a website.", "The full address of the website.", "A special program you open to find websites."], correct: 2 },
+                    { q: "What is the HOMEPAGE?", options: ["The space where you type the URL.", "The first, main page of a website.", "A special program like Chrome or Safari."], correct: 1 },
+                    { q: "The letters U.R.L. stand for what?", options: ["The full address of the website.", "The main page of a site.", "A special program to find websites."], correct: 0 },
+                    { q: "If you click your mouse on a screen, what do you do?", options: ["To tap.", "To type.", "To click."], correct: 2 },
+                    { q: "What do you use to move the page up and down?", options: ["To type.", "To scroll.", "To load."], correct: 1 },
+                    { q: "I want to write my name in the search box. I need to...", options: ["type.", "click.", "load."], correct: 0 },
+                    { q: "What is an ICON?", options: ["A space where you write the address.", "A button you click to do an action.", "A small picture that links to something."], correct: 2 },
+                    { q: "The sentence 'The page _______ slowly' needs the correct Present Simple verb.", options: ["load", "loads", "loading"], correct: 1 },
+                    { q: "The word BUTTON is a place you click to do an ________.", options: ["address", "action", "icon"], correct: 1 },
+                ]
+            },
+            // --- TEST 2: Cyber Safety: Passwords and Secret Information ---
+            {
+                id: 'test2',
+                title: 'Test 2: Cyber Safety: Passwords and Secret Information 🔒',
+                description: 'Read the text and answer the questions one by one.',
+                text: 
+                    "**Cyber Safety** is about staying safe in the Internet world. Your **password** is the most important thing—it is your **SECRET KEY** that lets you enter your accounts and platforms. The biggest risk is **Password Sharing**, which means giving your secret key to someone else, even a friend. The rule is simple: **NEVER** share your password with anyone. To make your account stronger, you can use **2-Step Login**; this requires your password and a second thing, usually a code sent to your phone. Another big danger is sharing **Secret Info**. This is information that tells people who you are in the real world, such as your full name, home address, or phone number. Sharing too much of this is called **Telling Too Much**. Before you give Secret Info, you must follow the **PROTECTION** rule: **Ask an adult**. Finally, many devices add a **Location Tag** to your photos, which says exactly where you are. Always turn this off.",
+                questions: [
+                    { q: "What does CYBER SAFETY mean?", options: ["Sharing your passwords with friends.", "Staying safe in the Internet world.", "Playing games on your phone."], correct: 1 },
+                    { q: "What is your password?", options: ["Your SECRET KEY to enter your account.", "A possible danger or problem.", "A type of website address."], correct: 0 },
+                    { q: "PASSWORD SHARING is the biggest risk. What does it mean?", options: ["Getting better things in a game.", "Giving your secret key to someone else.", "Changing your password often."], correct: 1 },
+                    { q: "What is the simple rule for your password?", options: ["Tell only your best friend.", "NEVER tell your password to anyone.", "Write it in your group chat."], correct: 1 },
+                    { q: "2-STEP LOGIN makes your account strong because you need two things. What are they?", options: ["A key and a code from your phone.", "A friend's password and your password.", "Your full name and home address."], correct: 0 },
+                    { q: "SECRET INFO is information that can tell people what?", options: ["Your favorite game.", "Who you are in the real world.", "What kind of computer you have."], correct: 1 },
+                    { q: "Which of these is an example of SECRET INFO?", options: ["Your full name.", "The name of your dog.", "The color of your shirt."], correct: 0 },
+                    { q: "What does Telling Too Much mean?", options: ["Giving people more information than they need.", "Asking an adult for help.", "Taking a photo at your house."], correct: 0 },
+                    { q: "What is the PROTECTION rule before giving Secret Info?", options: ["Post it in public chats.", "Ask an adult.", "Share it with your friend, Tom."], correct: 1 },
+                    { q: "What is a Location Tag?", options: ["A note on your photo that says where you are.", "The full address of a website.", "A key that only one person should have."], correct: 0 },
+                ]
+            },
+            // --- TEST 3: Cyber Safety: Fake Profiles and Trick Messages ---
+            {
+                id: 'test3',
+                title: 'Test 3: Cyber Safety: Fake Profiles and Trick Messages 🕵️‍♀️',
+                description: 'Read the text and answer the questions one by one.',
+                text: 
+                    "Sometimes, people use a **Fake Profile**, which is a false or untrue account, to trick or manipulate you. They might pretend to be a classmate or a famous person to get information. If you get a friend request that looks strange, you must **LOOK HARD** (check carefully) at the profile. If the profile has no shared friends, no real photos, or strange messages, you must **BLOCK** them to stay safe. Another big risk is the **Trick Message** (or phishing). This is a message that tries to fool you to steal your password or secret info. These messages often say the situation is **URGENT** (must be done now/quickly) to make you panic and click a link. When you get one, you must **Stop and Check** the sender's address. If the address is strange or official-looking but wrong, you must immediately **DELETE** the message. Never click the link!",
+                questions: [
+                    { q: "What is a FAKE PROFILE?", options: ["An account that uses 2-step login.", "A false or untrue account.", "A profile with many shared friends."], correct: 1 },
+                    { q: "Why do people use a Fake Profile?", options: ["To give you a free game download.", "To trick or manipulate you.", "To help you get better things."], correct: 1 },
+                    { q: "What should you do if a new friend request looks suspicious?", options: ["Look hard at the profile.", "Immediately share your photos.", "Agree to meet the person online."], correct: 0 },
+                    { q: "What does LOOK HARD mean?", options: ["To look quickly.", "To check carefully.", "To be by yourself."], correct: 1 },
+                    { q: "If a new friend request has no shared friends or photos, what should you do?", options: ["Add them.", "Block them.", "Ask them to meet."], correct: 1 },
+                    { q: "What is a TRICK MESSAGE?", options: ["A message that helps you fix your account.", "A message that tries to fool you to steal your key/info.", "A friendly message from an official app store."], correct: 1 },
+                    { q: "If you see the word URGENT in a message, what does it mean?", options: ["Something must be done now/quickly.", "You can check the sender's name later.", "The account will close in one year."], correct: 0 },
+                    { q: "What is the first thing you should do when you get a 'Trick Message'?", options: ["Click the link quickly.", "Stop and check the sender's name/address.", "Ask the sender for your password."], correct: 1 },
+                    { q: "If the sender's address in an urgent message is strange, you should...", options: ["click the link.", "reply quickly.", "DELETE the message."], correct: 2 },
+                    { q: "What does DELETE mean?", options: ["To remove or take away a file or message.", "To check carefully.", "To believe that someone is honest."], correct: 0 },
+                ]
+            },
+            // --- TEST 4: Cyber Safety: Cyberbullying and Bad Software/App Access ---
+            {
+                id: 'test4',
+                title: 'Test 4: Cyberbullying and Bad Software/App Access 🛑',
+                description: 'Read the text and answer the questions one by one.',
+                text: 
+                    "**Cyberbullying** is a serious problem. It means using mean words or actions on a platform to hurt another person. If someone is cyberbullying you, the most important rule is **DO NOT REPLY**. The second step is to **SAVE THE PROOF** by taking a screenshot of the mean words. After saving the proof, you must **TELL AN ADULT** and block the bully. Another risk is **Computer Sickness** or **Malware**. This is bad software that can damage your phone or computer, or make your files disappear. You should only **DOWNLOAD** apps from **Official** stores (like the App Store) because they are real and approved by the company. When you install an app, it asks you to **GIVE ACCESS**. This means you permit the app to use your device's features, like your camera or **Contacts** (your list of people you know). If a simple app asks for strange access, you must **READ CAREFULLY** and **SAY NO**.",
+                questions: [
+                    { q: "CYBERBULLYING is using ________ to hurt someone online.", options: ["helpful words", "MEAN WORDS", "2-step login"], correct: 1 },
+                    { q: "What is one protection step against cyberbullying?", options: ["Start a group chat attack.", "DO NOT REPLY to the mean words.", "Only tell your friend."], correct: 1 },
+                    { q: "If someone is cyberbullying you, what does SAVE THE PROOF mean?", options: ["To share the mean words with other people.", "To take a picture (screenshot) of the screen.", "To keep your phone closed."], correct: 1 },
+                    { q: "What should you do with the proof of cyberbullying?", options: ["Block the person and TELL AN ADULT.", "Delete the bad messages immediately.", "Wait until you feel alone."], correct: 0 },
+                    { q: "COMPUTER SICKNESS (Malware) is a program that does what?", options: ["Downloads files to your device.", "Downloads only official games.", "Damages your device or makes files disappear."], correct: 2 },
+                    { q: "You should ONLY DOWNLOAD from safe places like Official stores. What does Official mean?", options: ["Real and approved by the company.", "From a strange website.", "A free game download."], correct: 0 },
+                    { q: "What does GIVE ACCESS mean?", options: ["You remove a file or message.", "You permit the app to use your device's features.", "You use your key and a phone code."], correct: 1 },
+                    { q: "What is strange if a flashlight app asks for Contacts and Location?", options: ["It needs to use your camera.", "The app does not need this information to work.", "It helps you see your list of friends."], correct: 1 },
+                    { q: "What is a list of people you know on your phone called?", options: ["Contacts.", "Fake Profiles.", "Location Tags."], correct: 0 },
+                    { q: "What should you do before you GIVE ACCESS to an app?", options: ["Say yes quickly.", "READ CAREFULLY.", "Download a free game."], correct: 1 },
+                ]
+            }
         ];
 
-        const allQuestions = [
-            { id: 1, q: "1. What is the name of the program Maria opens first?", options: ["The Link", "Her browser", "The Address Bar", "The Homepage"], correct: 1, passage: 1 },
-            { id: 2, q: "2. Where on the screen is the Address Bar?", options: ["At the bottom", "In the center", "At the top of the screen", "Next to the Homepage"], correct: 2, passage: 1 },
-            { id: 3, q: "3. What does Maria type into the Address Bar?", options: ["A game title", "A password", "The full URL", "Her name"], correct: 2, passage: 1 },
-            { id: 4, q: "4. What is the Homepage?", options: ["The Address Bar", "The last page she visits", "The first, main page of a website", "The Browser application"], correct: 2, passage: 1 },
-            { id: 5, q: "5. Why does Maria always start on the Homepage?", options: ["Because it is new", "Because it is fast", "Because it has videos", "Because she must scroll"], correct: 1, passage: 1 },
-            { id: 6, q: "6. Complete the sentence correctly: The website _________ fast. (Load)", options: ["load", "loads", "is load", "loading"], correct: 1, passage: 1 },
-            { id: 7, q: "7. Which word is the full address of a website (abbreviation)?", options: ["CPU", "RAM", "URL", "ICON"], correct: 2, passage: 1 },
-            { id: 8, q: "8. Find the verb in the text that means to put information into a computer using a keyboard.", options: ["open", "load", "scroll", "type"], correct: 3, passage: 1 },
-            { id: 9, q: "9. If Maria is ready to start, has the website finished the action of loading?", options: ["No, it is still loading.", "Yes, it has loaded.", "Maybe, she needs to click.", "She closes the browser."], correct: 1, passage: 1 },
-            { id: 10, q: "10. True or False: Maria's browser is an application.", options: ["True", "False", "Not mentioned", "Only for games"], correct: 0, passage: 1 },
-            { id: 11, q: "11. What word does Juan type into the Search Bar?", options: ["Recipe", "Pizza", "Cook", "Juan"], correct: 1, passage: 2 },
-            { id: 12, q: "12. Why does Juan need to scroll down the page?", options: ["The button is big.", "The page is very long.", "To see the Address Bar.", "To close the browser."], correct: 1, passage: 2 },
-            { id: 13, q: "13. What is next to the delicious picture that Juan clicks?", options: ["An icon", "A button", "A search bar", "A link"], correct: 3, passage: 2 },
-            { id: 14, q: "14. What does the word link mean in this passage?", options: ["A picture", "A website address", "Text that opens a new page", "The search bar"], correct: 2, passage: 2 },
-            { id: 15, q: "15. What are the small pictures for?", options: ["Addresses and URLs", "Recipes and videos", "Buttons and scroll bars", "Only for pizza"], correct: 1, passage: 2 },
-            { id: 16, q: "16. Correct the verb form: Juan load the new page. (Load)", options: ["load", "loading", "loads", "loaded"], correct: 2, passage: 2 },
-            { id: 17, q: "17. Which verb means to move the page up or down?", options: ["type", "open", "scroll", "load"], correct: 2, passage: 2 },
-            { id: 18, q: "18. True or False: The page loaded quickly.", options: ["True", "False, it was slow.", "False, Juan scrolled a lot.", "Not mentioned"], correct: 0, passage: 2 },
-            { id: 19, q: "19. What does Juan click to start the search after typing?", options: ["The new page", "The homepage", "The 'Search' button", "The URL"], correct: 2, passage: 2 },
-            { id: 20, q: "20. What is the final action Juan does before cooking?", options: ["He closes the page.", "He scrolls up.", "He types the recipe.", "The new page loads."], correct: 3, passage: 2 },
-            { id: 21, q: "21. What is Alex's job?", options: ["A cook", "A teacher", "A web developer", "A driver"], correct: 2, passage: 3 },
-            { id: 22, q: "22. What is the first instruction Alex gives to his computer?", options: ["Type the URL!", "Click the icon!", "Open the browser!", "Close the page!"], correct: 2, passage: 3 },
-            { id: 23, q: "23. What does the pencil icon mean?", options: ["Save", "Delete", "Edit", "Open"], correct: 2, passage: 3 },
-            { id: 24, q: "24. What color is the button Alex says Do not click?", options: ["Blue", "Green", "Yellow", "Red"], correct: 3, passage: 3 },
-            { id: 25, q: "25. What is the final command to finish the work?", options: ["Close the page and the browser.", "Scroll up!", "Type the address!", "Click the pencil icon."], correct: 0, passage: 3 },
-            { id: 26, q: "26. Identify the verb form used for the positive instructions (e.g., Click the icon!).", options: ["Past Tense", "Base Verb (Imperative)", "Future Tense", "Verb + -s"], correct: 1, passage: 3 },
-            { id: 27, q: "27. What is the name for the small picture used to represent 'Edit'?", options: ["A button", "An icon", "A link", "A bar"], correct: 1, passage: 3 },
-            { id: 28, q: "28. Which is the correct negative instruction?", options: ["Do not scrolls up!", "Does not scroll up!", "Do not scroll up!", "Not scroll up!"], correct: 2, passage: 3 },
-            { id: 29, q: "29. If the user wants to see the menu, what instruction does Alex give?", options: ["Type 'Menu'!", "Scroll up!", "Click the delete button!", "Load the page!"], correct: 1, passage: 3 },
-            { id: 30, q: "30. What kind of element is the 'Delete' red?", options: ["An icon", "A link", "A button", "An address"], correct: 2, passage: 3 },
-            { id: 31, q: "31. What are the two ways David finds a website?", options: ["Address Bar and Scroll Bar", "Search Bar and Button", "Address Bar and Search Bar", "URL and Homepage"], correct: 2, passage: 4 },
-            { id: 32, q: "32. What is every search result called in the text?", options: ["A button", "A link", "An icon", "A browser"], correct: 1, passage: 4 },
-            { id: 33, q: "33. What color and size is the game button?", options: ["Huge and red", "Small and blue", "Huge and green", "Small and white"], correct: 2, passage: 4 },
-            { id: 34, q: "34. True or False: David uses his keyboard to scroll down a long page.", options: ["True, he types a code.", "False, he uses his finger or mouse.", "True, he clicks the keyboard.", "Not mentioned in the text."], correct: 1, passage: 4 },
-            { id: 35, q: "35. What does David always remember to do when he finishes playing?", options: ["To scroll up.", "To type his name.", "To close his browser.", "To open a new page."], correct: 2, passage: 4 },
-            { id: 36, q: "36. Complete the sentence: David always scrolls down with his finger or his _________.", options: ["eye", "keyboard", "mouse", "link"], correct: 2, passage: 4 },
-            { id: 37, q: "37. Which two verbs in the passage use the 'He/She/It' -s rule?", options: ["type and click", "open and close", "scrolls and clicks", "load and type"], correct: 2, passage: 4 },
-            { id: 38, q: "38. What is the full address of a website (abbreviation)?", options: ["GPS", "HTTP", "URL", "PDF"], correct: 2, passage: 4 },
-            { id: 39, q: "39. What action happens after David clicks the button?", options: ["The URL types.", "The browser opens.", "The game loads.", "The link closes."], correct: 2, passage: 4 },
-            { id: 40, q: "40. The word types is a verb. What is the base form of this verb?", options: ["type", "typing", "typed", "typess"], correct: 0, passage: 4 }
-        ];
 
-        // --- STATE MANAGEMENT (Omitted for brevity, remains the same) ---
+        // --- STATE AND LOCAL STORAGE MANAGEMENT ---
         let state = {
-            currentPassageIndex: 0,
-            currentQuestionIndex: -1,
-            userAnswers: {}, 
-            localVotes: {}, 
-            isFinished: false
+            currentTestIndex: 0,
+            currentQuestionIndex: 0,
+            isReadingPhase: true,
+            // Stores all votes: { 'test1-q0': { 'my-current-user': 1, 'sim1': 2, ... } }
+            allVotes: {}, 
+            // Stores whether a question has been checked (locally)
+            questionStatus: tests.reduce((acc, test) => { acc[test.id] = {}; return acc; }, {}),
         };
+        
+        const quizContainer = document.getElementById('quiz-container');
 
-        const quizContent = document.getElementById('quiz-content');
-        const actionButton = document.getElementById('action-btn');
-
-        // Initialize localVotes structure
-        allQuestions.forEach(q => {
-            state.localVotes[q.id] = { 0: 0, 1: 0, 2: 0, 3: 0 };
-        });
-
-        // --- CORE QUIZ FUNCTIONS (Omitted for brevity, remains the same) ---
-        function getQuestionsForCurrentPassage() {
-            const passageId = state.currentPassageIndex + 1;
-            return allQuestions.filter(q => q.passage === passageId);
-        }
-
-        function handleAnswer(qId, selectedIndex) {
-            if (state.userAnswers[qId] !== undefined) { 
-                return;
-            }
-            state.localVotes[qId][selectedIndex]++;
-            render(); 
-        }
-
-        function lockInVote(qId) {
-            const currentQVotes = state.localVotes[qId];
-            let maxVoteCount = -1;
-            let maxVoteIndex = -1;
-            for (let i = 0; i < 4; i++) {
-                const count = currentQVotes[i] || 0;
-                if (count > maxVoteCount) {
-                    maxVoteCount = count;
-                    maxVoteIndex = i;
-                }
-            }
-            state.userAnswers[qId] = maxVoteIndex;
-            render();
-        }
-
-        function render() {
-            if (state.isFinished) {
-                showFinalScore();
-                return;
-            }
-
-            const currentPassage = passages[state.currentPassageIndex];
-
-            if (state.currentQuestionIndex === -1) {
-                // RENDER PASSAGE VIEW
-                quizContent.innerHTML = `
-                    <h2 class="text-3xl font-bold text-gray-700 mb-4">${currentPassage.title}</h2>
-                    <div class="passage-box italic text-gray-600">
-                        ${currentPassage.text}
-                    </div>
-                    <p class="text-center text-lg font-medium text-gray-600 mt-4">This section has questions ${currentPassage.id * 10 - 9} to ${currentPassage.id * 10}.</p>
-                `;
-                actionButton.style.display = 'block';
-                actionButton.textContent = `Start Questions for ${currentPassage.title}`;
+        // Load votes and simulation data from local storage
+        function loadData() {
+            const storedVotes = localStorage.getItem('quizAllVotes');
+            if (storedVotes) {
+                state.allVotes = JSON.parse(storedVotes);
             } else {
-                // RENDER QUESTION VIEW
-                const passageQuestions = getQuestionsForCurrentPassage();
-                const currentQ = passageQuestions[state.currentQuestionIndex];
-                
-                if (!currentQ) {
-                    nextStep();
-                    return;
-                }
-                
-                const qId = currentQ.id;
-                const currentQVotes = state.localVotes[qId] || { 0: 0, 1: 0, 2: 0, 3: 0 };
-                let maxVoteCount = -1;
-                let maxVoteIndex = -1; 
+                state.allVotes = {};
+                // If no votes are stored (e.g., first run or after a reset), initialize the simulated votes
+                initializeSimulatedVotes();
+            }
 
-                for (let i = 0; i < 4; i++) {
-                    const count = currentQVotes[i] || 0;
-                    if (count > maxVoteCount) {
-                        maxVoteCount = count;
-                        maxVoteIndex = i;
-                    }
-                }
+            const storedState = localStorage.getItem('quizState');
+            if (storedState) {
+                const loadedState = JSON.parse(storedState);
+                state.currentTestIndex = loadedState.currentTestIndex || 0;
+                state.currentQuestionIndex = loadedState.currentQuestionIndex || 0;
+                state.isReadingPhase = loadedState.isReadingPhase !== undefined ? loadedState.isReadingPhase : true;
+                state.questionStatus = loadedState.questionStatus || state.questionStatus;
+            }
+        }
 
-                const isVoted = state.userAnswers[qId] !== undefined;
-                const groupAnswerIndex = state.userAnswers[qId];
-                
-                let optionsHtml = currentQ.options.map((option, index) => {
-                    const isCorrect = currentQ.correct === index;
-                    const isMajorityChoice = index === maxVoteIndex;
+        // Save current votes and state to local storage
+        function saveData() {
+            localStorage.setItem('quizAllVotes', JSON.stringify(state.allVotes));
+            localStorage.setItem('quizState', JSON.stringify({
+                currentTestIndex: state.currentTestIndex,
+                currentQuestionIndex: state.currentQuestionIndex,
+                isReadingPhase: state.isReadingPhase,
+                questionStatus: state.questionStatus
+            }));
+        }
+
+        // Initialize random, persistent votes for the simulated users
+        function initializeSimulatedVotes() {
+            tests.forEach(test => {
+                test.questions.forEach((qData, qIndex) => {
+                    const key = `${test.id}-q${qIndex}`;
                     
-                    let classes = 'choice-button mb-3';
-                    let starHtml = '';
-                    const count = currentQVotes[index] || 0;
-                    let voteText = `<span class="vote-count">(${count} votes)</span>`;
-                    
-                    if (isVoted) {
-                        classes += ' pointer-events-none '; 
+                    // Only initialize the votes for this question if it doesn't exist.
+                    if (!state.allVotes[key]) {
+                        state.allVotes[key] = { [USER_ID]: undefined }; // Initialize current user's vote as undefined (0 votes)
                         
-                        if (isCorrect) {
-                            classes += ' correct-choice';
-                        } else if (index === groupAnswerIndex && !isCorrect) {
-                            classes += ' wrong-choice';
-                        }
-
-                        if (index === groupAnswerIndex) {
-                            starHtml = `<span class="public-vote-star"> (${isCorrect ? 'Correct Group Answer' : 'Group Answer'})</span>`;
-                        }
-
-                    } else {
-                        if (isMajorityChoice && maxVoteCount > 0) {
-                            starHtml = `<span class="public-vote-star"> (CHOICE)</span>`;
-                        }
+                        SIMULATED_USERS.forEach(simId => {
+                            // Assign a random vote index (0, 1, or 2)
+                            state.allVotes[key][simId] = Math.floor(Math.random() * qData.options.length);
+                        });
                     }
-
-                    return `
-                        <button 
-                            class="${classes}" 
-                            data-option-index="${index}" 
-                            onclick="handleAnswer(${qId}, ${index})"
-                            ${isVoted ? 'disabled' : ''}
-                        >
-                            <span>${option}</span>
-                            <span class="vote-details">
-                                ${voteText} ${starHtml}
-                            </span>
-                        </button>
-                    `;
-                }).join('');
-
-                let questionControlsHtml = '';
-                if (isVoted) {
-                    actionButton.style.display = 'block';
-                    actionButton.textContent = 'Next Question';
-                } else {
-                    actionButton.style.display = 'none';
-                    questionControlsHtml = `
-                        <div class="mt-8">
-                            <button id="lock-in-btn" onclick="lockInVote(${qId})" class="w-full py-3 text-lg font-bold text-white rounded-xl shadow-lg transition duration-300 bg-green-600 hover:bg-green-700">
-                                LOCK IN GROUP VOTE!
-                            </button>
-                            <p class="text-sm text-center text-gray-500 mt-2 font-medium">Click an option repeatedly to count student votes first, then click the Lock In button.</p>
-                        </div>
-                    `;
-                }
-
-
-                quizContent.innerHTML = `
-                    <!-- Reference Passage -->
-                    <h3 class="text-2xl font-bold text-gray-700 mb-3">Passage Reference:</h3>
-                    <div class="reference-text italic text-gray-600">
-                        ${currentPassage.text}
-                    </div>
-
-                    <!-- Question and Options -->
-                    <div class="mb-4 text-center text-lg font-bold text-gray-600">Question ${currentQ.id} of 40</div>
-                    <div class="passage-box p-4">
-                        <p class="text-2xl font-extrabold mb-4">${currentQ.q}</p>
-                        <div class="space-y-4">
-                            ${optionsHtml}
-                        </div>
-                        ${questionControlsHtml}
-                    </div>
-                `;
-            }
-        }
-
-        function nextStep() {
-            const passageQuestions = getQuestionsForCurrentPassage();
-            
-            if (state.currentQuestionIndex === -1) {
-                state.currentQuestionIndex = 0; 
-            } 
-            else if (state.currentQuestionIndex < passageQuestions.length - 1) {
-                state.currentQuestionIndex++; 
-            } 
-            else if (state.currentPassageIndex < passages.length - 1) {
-                state.currentPassageIndex++; 
-                state.currentQuestionIndex = -1; 
-            } 
-            else {
-                state.isFinished = true;
-            }
-
-            render();
-            document.querySelector('.glass-container').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showFinalScore() {
-            let score = 0;
-            allQuestions.forEach(q => {
-                if (state.userAnswers.hasOwnProperty(q.id) && state.userAnswers[q.id] === q.correct) {
-                    score++;
-                }
+                });
             });
+            saveData();
+        }
 
-            quizContent.innerHTML = `
-                <div class="score-box p-8 rounded-3xl text-center shadow-2xl">
-                    <h2 class="text-4xl font-black text-green-600 mb-4">Quiz Complete! 🎉</h2>
-                    <p class="text-6xl font-black text-indigo-700 mb-8">${score} / 40</p>
-                    <p class="text-2xl text-gray-700 font-semibold">The group's final score is ${score} out of 40!</p>
-                    <p class="text-lg text-gray-500 mt-4">Great teamwork! Reload the page to start a new quiz session.</p>
+
+        // --- CORE QUIZ LOGIC ---
+
+        // Initial setup function
+        function initQuiz() {
+            loadData();
+            renderCurrentTest();
+        }
+        
+        // Function to clear all local storage data and restart the quiz
+        function resetAllData() {
+            localStorage.clear();
+            // Re-run initialization to generate new persistent simulated votes
+            // This will make all displayed vote counts start at 0 before the sim votes are generated,
+            // then the sim votes will be applied, so they'll only be 0 on a fresh load.
+            window.location.reload(); 
+        }
+
+        // Renders the main structure for the current test (Reading Text + Question Area)
+        function renderCurrentTest() {
+            const currentTest = tests[state.currentTestIndex];
+            
+            // If starting a new test, reset to the first question and reading phase
+            if (state.isReadingPhase || state.currentTestIndex !== tests.indexOf(currentTest)) {
+                 state.currentQuestionIndex = 0;
+                 state.isReadingPhase = true;
+            }
+
+            quizContainer.innerHTML = `
+                <div id="test-card-${currentTest.id}" class="test-card bg-white p-6 sm:p-8 rounded-xl shadow-xl my-8 border-t-4 border-secondary-blue">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">${currentTest.title}</h2>
+                    
+                    <!-- Reading Text Section -->
+                    <div id="reading-section" class="reading-text bg-blue-50/70 p-4 sm:p-6 rounded-lg mb-8 text-gray-700 border-l-4 border-secondary-blue ${state.isReadingPhase ? '' : 'hidden'}">
+                        <p class="font-bold text-xl mb-3 text-secondary-blue">Reading Text:</p>
+                        <p class="whitespace-pre-wrap text-base">${currentTest.text}</p>
+                        <button onclick="startQuestions()" class="mt-6 w-full px-6 py-3 bg-primary-green hover:bg-green-700 text-white font-bold rounded-lg shadow-md transition duration-200">
+                            Start Questions
+                        </button>
+                    </div>
+
+                    <!-- Question Section -->
+                    <div id="question-section" class="${state.isReadingPhase ? 'hidden' : ''}">
+                        <div id="question-content">
+                            <!-- Question and options will be injected here -->
+                        </div>
+                        <div id="navigation-controls" class="mt-8 flex justify-between space-x-4">
+                            <!-- Navigation buttons injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Result Box -->
+                    <div id="${currentTest.id}-result" class="result-box mt-6 p-4 rounded-lg bg-secondary-blue/10 border border-secondary-blue/30 hidden">
+                        <!-- Final results injected here -->
+                    </div>
                 </div>
             `;
-            actionButton.style.display = 'none'; 
-        }
-        
-        
-        // --- INTERACTIVE PARTICLE EFFECT LOGIC (New Swarm System) ---
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        // Fixed the variable declaration issue with 'var'
-        var W, H; 
-        
-        // Mouse/Interaction state
-        let mouse = { x: null, y: null, radius: 100 };
-
-        function resizeCanvas() {
-            W = window.innerWidth;
-            H = window.innerHeight;
-            canvas.width = W;
-            canvas.height = H;
-        }
-        
-        // Listen for mouse movement to update the interaction point
-        canvas.addEventListener('mousemove', function(event) {
-            mouse.x = event.x;
-            mouse.y = event.y + window.scrollY;
-        });
-
-        // Hide mouse interaction when pointer leaves the window
-        canvas.addEventListener('mouseleave', function() {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * W;
-                this.y = Math.random() * H;
-                this.radius = 2 + Math.random() * 2;
-                this.vx = (Math.random() - 0.5) * 1; // Velocity X
-                this.vy = (Math.random() - 0.5) * 1; // Velocity Y
-
-                // Use the light background colors for the particles
-                const colors = ['#fde047', '#34d399', '#f97316', '#a78bfa'];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            draw() {
-                ctx.globalAlpha = 0.8;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-            update() {
-                // Check boundaries and reverse velocity
-                if (this.x < 0 || this.x > W) this.vx *= -1;
-                if (this.y < 0 || this.y > H) this.vy *= -1;
-
-                this.x += this.vx;
-                this.y += this.vy;
-            }
-
-            // Method to repel particles from the mouse
-            interact() {
-                if (mouse.x === null || mouse.y === null) return;
-
-                const dx = this.x - mouse.x;
-                const dy = this.y - mouse.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                if (distance < mouse.radius) {
-                    const forceDirectionX = dx / distance;
-                    const forceDirectionY = dy / distance;
-                    
-                    // Force is stronger when closer, but limited to prevent instability
-                    const maxForce = 5; 
-                    const force = Math.min(maxForce, (mouse.radius - distance) / mouse.radius); 
-
-                    // Apply repulsion force to velocity
-                    this.vx += forceDirectionX * force * 0.5;
-                    this.vy += forceDirectionY * force * 0.5;
-
-                    // Limit velocity to prevent particles from flying off too fast
-                    const maxSpeed = 3;
-                    this.vx = Math.min(Math.max(this.vx, -maxSpeed), maxSpeed);
-                    this.vy = Math.min(Math.max(this.vy, -maxSpeed), maxSpeed);
-                }
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            // Use slightly more particles for the connecting effect
-            const particleCount = Math.floor((W * H) / 12000); 
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        }
-
-        function connectParticles() {
-            let maxDistance = 90; // Only connect particles within this distance
-
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a; b < particles.length; b++) {
-                    const dx = particles[a].x - particles[b].x;
-                    const dy = particles[a].y - particles[b].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < maxDistance) {
-                        // Calculate opacity based on distance (closer = more opaque)
-                        const opacity = 1 - (distance / maxDistance);
-                        
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.2})`; // Faint white lines
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        function animateParticles() {
-            requestAnimationFrame(animateParticles);
-            // Clear the canvas fully with a transparent/faint color for a clean look
-            ctx.fillStyle = 'rgba(167, 139, 250, 0.2)'; 
-            ctx.fillRect(0, 0, W, H);
             
-            connectParticles();
+            if (!state.isReadingPhase) {
+                displayCurrentQuestion();
+            }
 
-            particles.forEach(p => {
-                p.interact();
-                p.update();
-                p.draw();
-            });
+            saveData();
         }
 
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            initParticles(); 
-        });
-
-        // Initial setup
-        resizeCanvas();
-        initParticles();
-        animateParticles();
+        // Hides reading text and shows the current question
+        function startQuestions() {
+            document.getElementById('reading-section').classList.add('hidden');
+            document.getElementById('question-section').classList.remove('hidden');
+            state.isReadingPhase = false;
+            displayCurrentQuestion();
+        }
         
-        // Initialize the quiz
-        window.onload = render;
+        // Updates the current user's vote and re-renders
+        function updateVote(qIndex, selectedValue) {
+            const currentTest = tests[state.currentTestIndex];
+            const key = `${currentTest.id}-q${qIndex}`;
+            
+            if (!state.allVotes[key]) {
+                // Should not happen if initializeSimulatedVotes ran, but handle safely
+                initializeSimulatedVotes();
+                // Ensure new question key exists before setting vote
+                if (!state.allVotes[key]) {
+                    state.allVotes[key] = { [USER_ID]: undefined };
+                }
+            }
+            
+            // Record the current user's vote
+            state.allVotes[key][USER_ID] = selectedValue;
+            saveData();
+            
+            // Re-render to show the updated vote counts and majority
+            displayCurrentQuestion();
+        }
+
+        // Renders the current question based on state.currentQuestionIndex
+        function displayCurrentQuestion() {
+            const currentTest = tests[state.currentTestIndex];
+            const qData = currentTest.questions[state.currentQuestionIndex];
+            const qIndex = state.currentQuestionIndex;
+            const testId = currentTest.id;
+            const totalQuestions = currentTest.questions.length;
+            const key = `${testId}-q${qIndex}`;
+            
+            const questionContent = document.getElementById('question-content');
+            const navigationControls = document.getElementById('navigation-controls');
+            
+            const currentQuestionVotes = state.allVotes[key] || {};
+            
+            // --- TALLY VOTES AND FIND MAJORITY ---
+            const voteCounts = qData.options.map(() => 0);
+            let maxVotes = -1;
+            let majorityAnswerIndex = -1;
+            let totalVotesCast = 0;
+            
+            Object.values(currentQuestionVotes).forEach(optionIndex => {
+                if (optionIndex !== undefined && optionIndex !== null) {
+                    voteCounts[optionIndex]++;
+                    totalVotesCast++;
+                    if (voteCounts[optionIndex] > maxVotes) {
+                        maxVotes = voteCounts[optionIndex];
+                        majorityAnswerIndex = optionIndex;
+                    } 
+                    // No tie-breaking needed, simply the one with the highest count
+                }
+            });
+
+            const myVote = currentQuestionVotes[USER_ID];
+            // Check if the question has been checked locally by the user
+            const isChecked = state.questionStatus[testId] && state.questionStatus[testId][qIndex] !== undefined;
+            const isCorrect = isChecked ? state.questionStatus[testId][qIndex] : undefined;
+
+            // 1. Render Question Content
+            questionContent.innerHTML = `
+                <div class="question p-4 rounded-lg border border-gray-100" data-q-index="${qIndex}">
+                    <p class="font-bold text-secondary-blue mb-1">Question ${qIndex + 1} of ${totalQuestions}</p>
+                    <p class="font-semibold text-gray-900 mb-3 text-lg">${qData.q}</p>
+                    <div class="options space-y-2">
+                        ${qData.options.map((option, oIndex) => {
+                            const inputName = `${testId}-q${qIndex}`;
+                            const isVotedByMe = myVote === oIndex;
+                            const isMajorityAnswer = oIndex === majorityAnswerIndex && maxVotes > 0;
+                            const currentVoteCount = voteCounts[oIndex];
+
+                            let labelClass = 'flex items-center p-3 rounded-md transition-colors duration-150';
+
+                            // Highlight my vote (light blue background)
+                            if (isVotedByMe) {
+                                labelClass += ' bg-blue-100 font-medium';
+                            }
+
+                            // Highlight group majority choice (blue border) - THIS IS THE FINAL ANSWER VOTE
+                            if (isMajorityAnswer) {
+                                labelClass += ' border-2 border-secondary-blue shadow-md';
+                            }
+                            
+                            // Highlight fixed correct answer if checked locally
+                            if (isChecked) {
+                                // Highlight the FIXED correct answer with green
+                                if (oIndex === qData.correct) {
+                                    labelClass += ' !bg-green-100 border-green-400';
+                                }
+                                // Highlight my INCORRECT vote with red
+                                else if (isVotedByMe && oIndex !== qData.correct) {
+                                     labelClass += ' !bg-red-200 border-red-500';
+                                }
+                            }
+
+                            return `
+                                <label class="question-label ${labelClass}" for="${inputName}-o${oIndex}">
+                                    <input 
+                                        type="radio" 
+                                        id="${inputName}-o${oIndex}" 
+                                        name="${inputName}" 
+                                        value="${oIndex}" 
+                                        ${isVotedByMe ? 'checked' : ''} 
+                                        onchange="window.updateVote(${qIndex}, ${oIndex})"
+                                        class="w-4 h-4 text-primary-green focus:ring-primary-green"
+                                    >
+                                    <span class="ml-3 text-gray-700">${option} 
+                                        <span class="font-bold text-gray-500 ml-2">(${currentVoteCount} votes)</span>
+                                    </span>
+                                </label>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                ${isChecked !== undefined ? `<p class="mt-4 text-sm font-medium ${isCorrect ? 'text-primary-green' : 'text-red-600'}">
+                    ${isCorrect ? 'Your individual choice (fixed key) was Correct! Move to the next question.' : 'Your individual choice was Incorrect. The correct fixed answer is highlighted in green.'}
+                </p>` : ''}
+                
+                <p class="mt-4 text-sm text-gray-500">
+                    <span class="font-bold">Total Voters:</span> ${TOTAL_VOTERS}. <span class="font-bold">Group Answer:</span> Option ${majorityAnswerIndex !== -1 ? majorityAnswerIndex + 1 : 'N/A'} (Highlighted with blue border).
+                </p>
+            `;
+
+            // 2. Render Navigation Controls
+            const prevButton = `<button onclick="navigateQuestion(-1)" ${qIndex === 0 ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg transition duration-200 disabled:opacity-50">← Previous</button>`;
+            
+            let nextButton;
+            if (qIndex < totalQuestions - 1) {
+                // Next Question Button
+                nextButton = `<button id="next-btn" onclick="checkAnswer(true)" class="px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition duration-200">
+                                Check My Answer & Next →
+                              </button>`;
+            } else {
+                // Finish Test Button
+                nextButton = `<button onclick="showFinalResults()" class="px-6 py-3 bg-primary-green hover:bg-green-700 text-white font-bold rounded-lg shadow-md transition duration-200">
+                                Finish Test and Score!
+                              </button>`;
+            }
+
+            navigationControls.innerHTML = `
+                ${prevButton}
+                ${nextButton}
+            `;
+
+            // Scroll to the question content only on initial load
+            questionContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Handles checking the answer for the current question
+        function checkAnswer(navigateOnSuccess = false) {
+            const currentTest = tests[state.currentTestIndex];
+            const qData = currentTest.questions[state.currentQuestionIndex];
+            const qIndex = state.currentQuestionIndex;
+            const testId = currentTest.id;
+
+            const myVote = state.allVotes[`${testId}-q${qIndex}`][USER_ID];
+            
+            const resultBox = document.getElementById(`${testId}-result`);
+            if (myVote === undefined || myVote === null) {
+                resultBox.classList.remove('hidden');
+                resultBox.innerHTML = '<p class="text-red-500 font-bold">Please select an answer (vote) before checking.</p>';
+                resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            } else {
+                resultBox.classList.add('hidden');
+                resultBox.innerHTML = '';
+            }
+            
+            // Check against the fixed correct answer
+            const isCorrect = myVote === qData.correct;
+            state.questionStatus[testId][qIndex] = isCorrect;
+            saveData();
+            
+            // Re-render the current question to show fixed-key feedback
+            displayCurrentQuestion();
+
+            // Navigate if requested 
+            if (navigateOnSuccess) {
+                setTimeout(() => {
+                    navigateQuestion(1);
+                }, 500); 
+            }
+        }
+
+        // Handles moving between questions
+        function navigateQuestion(direction) {
+            const currentTest = tests[state.currentTestIndex];
+            const newIndex = state.currentQuestionIndex + direction;
+
+            if (newIndex >= 0 && newIndex < currentTest.questions.length) {
+                state.currentQuestionIndex = newIndex;
+                displayCurrentQuestion();
+            } else if (newIndex === currentTest.questions.length && direction === 1) {
+                showFinalResults();
+            }
+            saveData();
+        }
+
+        // Calculates and displays the final score for the current test
+        function showFinalResults() {
+            const currentTest = tests[state.currentTestIndex];
+            const testId = currentTest.id;
+            let score = 0;
+            const totalQuestions = currentTest.questions.length;
+            
+            // Recalculate score based on current user's vote against the fixed answer
+            for (let i = 0; i < totalQuestions; i++) {
+                const key = `${testId}-q${i}`;
+                const userVote = state.allVotes[key] ? state.allVotes[key][USER_ID] : undefined;
+                
+                // Ensure a vote exists before checking correctness
+                if (userVote !== undefined && userVote === currentTest.questions[i].correct) {
+                     score++;
+                     state.questionStatus[testId][i] = true;
+                } else if (userVote !== undefined) {
+                    state.questionStatus[testId][i] = false;
+                }
+            }
+            saveData();
+
+
+            // Display overall results
+            const resultBox = document.getElementById(`${testId}-result`);
+            const color = score >= totalQuestions * 0.7 ? 'primary-green' : 'red-500';
+            const message = score >= totalQuestions * 0.7 ? "Great job! You passed this section based on the fixed answers." : "Keep studying! Your final score is low based on the fixed answers. Try again.";
+            
+            resultBox.innerHTML = `
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Quiz Results:</h3>
+                <p class="text-xl font-bold text-${color}">Score: ${score} / ${totalQuestions}</p>
+                <p class="text-md text-gray-700 mt-3">${message}</p>
+                
+                <div class="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <button onclick="navigateTest(1)" class="px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition duration-200">
+                        ${state.currentTestIndex < tests.length - 1 ? 'Go to Next Test' : 'Quiz Complete!'}
+                    </button>
+                    <button onclick="renderCurrentTest()" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow-md transition duration-200">
+                        Review Test 
+                    </button>
+                </div>
+            `;
+            resultBox.classList.remove('hidden');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Handles navigation between different tests
+        function navigateTest(direction) {
+            const newIndex = state.currentTestIndex + direction;
+            if (newIndex >= 0 && newIndex < tests.length) {
+                state.currentTestIndex = newIndex;
+                state.isReadingPhase = true;
+                renderCurrentTest();
+            } else if (newIndex === tests.length) {
+                 quizContainer.innerHTML = `
+                    <div class="test-card bg-white p-10 rounded-xl shadow-xl my-8 text-center">
+                        <h2 class="text-4xl font-extrabold text-primary-green mb-4">Congratulations! 🎉</h2>
+                        <p class="text-xl text-gray-700">You have completed all the A2 Technical English quizzes.</p>
+                    </div>
+                `;
+            }
+            saveData();
+        }
+        
+        // Expose functions globally for HTML calls
+        window.updateVote = updateVote;
+        window.startQuestions = startQuestions;
+        window.checkAnswer = checkAnswer;
+        window.navigateQuestion = navigateQuestion;
+        window.showFinalResults = showFinalResults;
+        window.renderCurrentTest = renderCurrentTest;
+        window.navigateTest = navigateTest;
+        window.resetAllData = resetAllData; // Expose the new reset function
+
+        // Initialize the app on load
+        initQuiz();
     </script>
 </body>
 </html>
