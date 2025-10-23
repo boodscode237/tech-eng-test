@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Awesome Website Quiz! 🚀</title>
+    <title>Awesome Technical English Quiz (Real-Time Tally) 🚀</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -35,23 +35,24 @@
         .option-label:hover {
             background-color: #dbeafe; /* Lighter blue on hover */
         }
+        /* Highlight for the option with the current majority of votes */
         .option-label.majority {
             border-width: 4px; /* Thicker border for majority */
             border-color: #3b82f6;
             background-color: #dbeafe; /* Slightly darker light blue */
             box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -2px rgba(59, 130, 246, 0.2);
         }
+        /* Highlight for the FIXED correct answer after locking in */
         .option-label.correct {
             border-color: #10b981; /* Green border for correct */
             background-color: #d1fae5; /* Light green background */
         }
-        .option-label.incorrect {
-            border-color: #ef4444; /* Red border for incorrect */
+        /* Highlight for the INCORRECT group majority answer after locking in */
+        .option-label.incorrect-majority {
+            border-color: #ef4444; /* Red border for incorrect majority */
             background-color: #fee2e2; /* Light red background */
         }
-        input[type="radio"] {
-            display: none; /* Hide default radio button */
-        }
+        
         /* Custom button styling */
         #lock-in-btn {
             background-color: #10b981; /* Primary Green */
@@ -103,47 +104,42 @@
             <button onclick="window.resetAllData()" class="red-button px-4 py-2 text-white font-bold text-sm rounded-lg shadow-lg transition duration-200">
                 Reset All Votes & Progress
             </button>
-            <p class="text-xs text-white opacity-80 mt-1">Clears all stored data to restart with 0 votes.</p>
+            <p class="text-xs text-white opacity-80 mt-1">Clears all stored data to restart with 0 votes on all questions.</p>
         </div>
     </div>
 
     <script>
-        // --- CONSTANTS ---
-        const USER_ID = 'my-current-user'; // Unique ID for current user's vote
-        const SIMULATED_USERS = ['sim1', 'sim2', 'sim3', 'sim4', 'sim5', 'sim6', 'sim7', 'sim8'];
-        const TOTAL_VOTERS = 1 + SIMULATED_USERS.length; // 9 total votes (1 real + 8 simulated)
-        
         // --- QUIZ DATA ---
+        // Content based on Cyber Safety materials
         const tests = [
             {
                 id: 'test1',
-                title: 'Passage 1: The Browser and the Homepage',
-                icon: '💻 Awesome Website Quiz! 🚀',
+                title: 'Passage 1: Password Sharing (Risk 1)',
+                icon: '🔑 Cyber Safety Quiz 🔒',
                 text: 
-                    "Every day, Maria wants to watch a video. First, she opens her **browser** program. This is the application she uses for the internet. She looks at the top of the screen where the **Address Bar** is. In this space, she must type the full **URL** of the website. For example, she types 'www.videozone.com'. After she presses 'Enter,' the website starts to load. The first screen she sees is the **Homepage**. This is the main page where she can start her search. Maria always starts here because it is fast. When the whole website loads, she is ready to begin.",
+                    "CYBER SAFETY is your job to stay **safe in the Internet world**. Your password is your **SECRET KEY**. This key lets you enter your account. **PASSWORD SHARING** is when you give your secret key to someone else, even a friend like Tom. This is the **biggest risk**. The rule is simple: you must **NEVER** share your password. If a friend asks for your password to help you get better things in a game, you must **SAY NO**. We must remember that **Trust** means to believe that someone is good and honest.",
                 questions: [
-                    { q: "What is the name of the program Maria opens first?", options: ["The Link", "Her browser", "The Address Bar", "The Homepage"], correct: 1 },
-                    { q: "What is the 'main door' of the website?", options: ["The URL", "The Address Bar", "The Homepage", "The Browser"], correct: 2 },
-                    { q: "Where does Maria type the website's address?", options: ["The screen", "The Link", "The Browser", "The Address Bar"], correct: 3 },
-                    { q: "What does Maria do after she types the address?", options: ["She scrolls.", "She presses 'Enter.'", "She clicks the icon.", "She starts the video."], correct: 1 },
-                    { q: "What is the website's full address called?", options: ["The Homepage", "The Application", "The URL", "The Program"], correct: 2 },
+                    { q: "What is your password called in this text?", options: ["The Key Access", "The Secret Key", "The Trust Code", "The Game Pass"], correct: 1 },
+                    { q: "What does PASSWORD SHARING mean?", options: ["Changing your key often.", "Giving your key to someone else.", "Checking your friend's key.", "Getting a better game."], correct: 1 },
+                    { q: "What is the simple rule for your password?", options: ["Share it with Tom.", "Write it down.", "NEVER share it.", "Share it only once."], correct: 2 },
+                    { q: "What does the word TRUST mean?", options: ["To say 'no'.", "To believe someone is good.", "To share a key.", "To stay safe."], correct: 1 },
+                    { q: "Password Sharing is described as the...", options: ["best action.", "smallest risk.", "biggest risk.", "safest choice."], correct: 2 },
                 ]
             },
             {
                 id: 'test2',
-                title: 'Passage 2: Controls and Actions',
-                icon: '🖱️ Controls and Actions 👆',
+                title: 'Passage 2: App Access (Risk 7)',
+                icon: '📱 Permissions Check ✅',
                 text: 
-                    "To interact with the page, you **click** your mouse or **tap** your screen to select things or buttons. If you want to put information into a search box, you **type** your words. When you want to move the page up or down to see more content, you **scroll**. When you select a button or an **icon** (a small picture that links to something), the page may need time to **load**. Sometimes, the connection is slow, and the page loads slowly.",
+                    "When you install an app from a safe store, it will ask you to **GIVE ACCESS**. This means you **permit** the app to use your device's features, like your camera, photos, or **Location**. For example, a map app needs access to your Location to work, but a flashlight app does not. If an app asks for strange access, you must **READ CAREFULLY** and **SAY NO**. You can always check the access permissions later in your phone's settings. The list of people you know on your phone is called your **Contacts**.",
                 questions: [
-                    { q: "What is the action when you use your finger on a screen?", options: ["To scroll", "To click", "To load", "To tap"], correct: 3 },
-                    { q: "You write words in a text box. This action is...", options: ["To type", "To load", "To scroll", "To click"], correct: 0 },
-                    { q: "What is an ICON?", options: ["The place where you write.", "A small picture that links to something.", "A slow connection.", "The main page of a site."], correct: 1 },
-                    { q: "The website loads. What does 'to load' mean in this context?", options: ["To scroll up.", "To open the browser.", "To need time to prepare content.", "To click the button."], correct: 2 },
-                    { q: "If you want to move the page down, you need to...", options: ["load.", "type.", "scroll.", "tap."], correct: 2 },
+                    { q: "What does GIVE ACCESS mean?", options: ["To close the app.", "To let the app use your device features.", "To uninstall the app.", "To check the password."], correct: 1 },
+                    { q: "What should you do if an app asks for strange access?", options: ["Say 'Yes' quickly.", "READ CAREFULLY and SAY NO.", "Share your password.", "Install a free game."], correct: 1 },
+                    { q: "Which app likely needs Location access?", options: ["A clock app.", "A music player.", "A map app.", "A calculator."], correct: 2 },
+                    { q: "What is the list of people you know on your phone called?", options: ["The Location Tag", "The Access List", "The Contacts", "The Homepage"], correct: 2 },
+                    { q: "What can you do later in the device settings?", options: ["Delete the whole app.", "Check and change access permissions.", "Download a virus.", "Start a video."], correct: 1 },
                 ]
             }
-            // You can add more tests here, pulling data from the uploaded PPT files if needed
         ];
 
 
@@ -152,17 +148,17 @@
             currentTestIndex: 0,
             currentQuestionIndex: 0,
             isReadingPhase: true,
-            // Stores all votes: { 'test1-q0': { 'my-current-user': 1, 'sim1': 2, ... } }
+            // Stores vote counts as an array: { 'test1-q0': [3, 5, 2, 0] }
             allVotes: {}, 
-            // Stores whether a question has been checked (locally)
+            // Stores the correct/incorrect status for fixed answer key comparison
             questionStatus: tests.reduce((acc, test) => { acc[test.id] = {}; return acc; }, {}),
-            // Flag to ensure simulation runs only once
-            simulationInitialized: false
+            // Stores the index of the option that currently holds the majority vote
+            majorityVote: tests.reduce((acc, test) => { acc[test.id] = {}; return acc; }, {}),
         };
         
         const quizContainer = document.getElementById('quiz-container');
 
-        // Load votes and simulation data from local storage
+        // Load data from local storage
         function loadData() {
             const storedVotes = localStorage.getItem('quizAllVotes');
             if (storedVotes) {
@@ -176,11 +172,22 @@
                 state.currentQuestionIndex = loadedState.currentQuestionIndex || 0;
                 state.isReadingPhase = loadedState.isReadingPhase !== undefined ? loadedState.isReadingPhase : true;
                 state.questionStatus = loadedState.questionStatus || state.questionStatus;
-                state.simulationInitialized = loadedState.simulationInitialized !== undefined ? loadedState.simulationInitialized : false;
+                state.majorityVote = loadedState.majorityVote || state.majorityVote;
             }
+            
+             // Initialize votes array for all questions if not present
+            tests.forEach(test => {
+                if (!state.allVotes[test.id]) state.allVotes[test.id] = {};
+                test.questions.forEach((qData, qIndex) => {
+                    const key = `q${qIndex}`;
+                    if (!state.allVotes[test.id][key]) {
+                        state.allVotes[test.id][key] = new Array(qData.options.length).fill(0);
+                    }
+                });
+            });
         }
 
-        // Save current votes and state to local storage
+        // Save current state to local storage
         function saveData() {
             localStorage.setItem('quizAllVotes', JSON.stringify(state.allVotes));
             localStorage.setItem('quizState', JSON.stringify({
@@ -188,37 +195,8 @@
                 currentQuestionIndex: state.currentQuestionIndex,
                 isReadingPhase: state.isReadingPhase,
                 questionStatus: state.questionStatus,
-                simulationInitialized: state.simulationInitialized
+                majorityVote: state.majorityVote,
             }));
-        }
-
-        // Initialize random, persistent votes for the simulated users
-        function initializeSimulatedVotes() {
-             if (state.simulationInitialized) return; // Don't run twice
-            
-            tests.forEach(test => {
-                test.questions.forEach((qData, qIndex) => {
-                    const key = `${test.id}-q${qIndex}`;
-                    
-                    if (!state.allVotes[key]) {
-                        state.allVotes[key] = {}; 
-                    }
-                    
-                    // Initialize current user's vote if not present
-                    if (state.allVotes[key][USER_ID] === undefined) {
-                        state.allVotes[key][USER_ID] = null; 
-                    }
-
-                    SIMULATED_USERS.forEach(simId => {
-                        // Assign a random vote index (0, 1, 2, 3)
-                        if (state.allVotes[key][simId] === undefined) {
-                            state.allVotes[key][simId] = Math.floor(Math.random() * qData.options.length);
-                        }
-                    });
-                });
-            });
-            state.simulationInitialized = true;
-            saveData();
         }
 
 
@@ -298,23 +276,20 @@
             displayCurrentQuestion();
         }
         
-        // Updates the current user's vote and re-renders
-        function updateVote(qIndex, selectedValue) {
+        // **CRITICAL FIX**: Increments the vote count for the selected option by 1
+        function updateVote(qIndex, selectedOptionIndex) {
             const currentTest = tests[state.currentTestIndex];
-            const key = `${currentTest.id}-q${qIndex}`;
-            
-            // CRITICAL CHANGE: Initialize simulated votes ONLY after the first user interaction
-            if (!state.simulationInitialized) {
-                initializeSimulatedVotes();
-            }
+            const testId = currentTest.id;
+            const key = `q${qIndex}`;
 
-            // Ensure question key exists
-            if (!state.allVotes[key]) {
-                state.allVotes[key] = {};
+            // Increment the specific option's count
+            if (state.allVotes[testId] && state.allVotes[testId][key]) {
+                state.allVotes[testId][key][selectedOptionIndex]++;
+            } else {
+                 console.error("Vote array not initialized!");
+                 return;
             }
             
-            // Record the current user's vote
-            state.allVotes[key][USER_ID] = selectedValue;
             saveData();
             
             // Re-render to show the updated vote counts and majority
@@ -328,42 +303,35 @@
             const qIndex = state.currentQuestionIndex;
             const testId = currentTest.id;
             const totalQuestions = currentTest.questions.length;
-            const key = `${testId}-q${qIndex}`;
+            const key = `q${qIndex}`;
             
             const questionContent = document.getElementById('question-content');
             const navigationControls = document.getElementById('navigation-controls');
             const feedbackBox = document.getElementById('feedback-box');
 
-            // Get votes, initialize if necessary (for 0-start display)
-            const currentQuestionVotes = state.allVotes[key] || {};
-            if (!currentQuestionVotes[USER_ID]) {
-                currentQuestionVotes[USER_ID] = null; // Ensure user vote starts as null
-            }
+            const currentQuestionVotes = state.allVotes[testId] ? state.allVotes[testId][key] : new Array(qData.options.length).fill(0);
             
             // --- TALLY VOTES AND FIND MAJORITY ---
-            const voteCounts = qData.options.map(() => 0);
             let maxVotes = -1;
             let majorityAnswerIndex = -1;
             let totalVotesCast = 0;
             
-            // Only count simulated votes if the simulation has been initialized
-            const votesToTally = state.simulationInitialized ? currentQuestionVotes : {};
-            
-            Object.keys(votesToTally).forEach(voterId => {
-                const optionIndex = votesToTally[voterId];
-                if (optionIndex !== undefined && optionIndex !== null) {
-                    voteCounts[optionIndex]++;
-                    totalVotesCast++;
-                    if (voteCounts[optionIndex] > maxVotes) {
-                        maxVotes = voteCounts[optionIndex];
-                        majorityAnswerIndex = optionIndex;
-                    } 
+            currentQuestionVotes.forEach((count, index) => {
+                totalVotesCast += count;
+                if (count > maxVotes) {
+                    maxVotes = count;
+                    majorityAnswerIndex = index;
                 }
             });
 
-            const myVote = currentQuestionVotes[USER_ID];
+            // Update stored majority for tracking and scoring
+            if (!state.majorityVote[testId]) state.majorityVote[testId] = {};
+            state.majorityVote[testId][qIndex] = majorityAnswerIndex;
+
+
             const isChecked = state.questionStatus[testId] && state.questionStatus[testId][qIndex] !== undefined;
             const isCorrect = isChecked ? state.questionStatus[testId][qIndex] : undefined;
+            const correctAnswerIndex = qData.correct;
 
             // 1. Render Question Content
             questionContent.innerHTML = `
@@ -375,18 +343,12 @@
                     <div class="options space-y-3">
                         ${qData.options.map((option, oIndex) => {
                             const inputName = `${testId}-q${qIndex}`;
-                            const isVotedByMe = myVote === oIndex;
                             const isMajorityAnswer = oIndex === majorityAnswerIndex && maxVotes > 0;
-                            const currentVoteCount = voteCounts[oIndex] || 0;
+                            const currentVoteCount = currentQuestionVotes[oIndex];
 
                             let labelClass = 'flex items-center justify-between p-4 rounded-xl option-label';
-
-                            // Highlight my selection
-                            if (isVotedByMe) {
-                                labelClass += ' bg-blue-200 border-secondary-blue';
-                            }
                             
-                            // Highlight group majority choice (blue border)
+                            // Highlight current vote majority (blue border)
                             if (isMajorityAnswer && !isChecked) {
                                 labelClass += ' majority';
                             }
@@ -394,32 +356,28 @@
                             // Fixed answer feedback
                             if (isChecked) {
                                 // Highlight the FIXED correct answer with green
-                                if (oIndex === qData.correct) {
+                                if (oIndex === correctAnswerIndex) {
                                     labelClass += ' correct';
                                 }
-                                // Highlight my INCORRECT vote with red
-                                else if (isVotedByMe && oIndex !== qData.correct) {
-                                     labelClass += ' incorrect';
+                                // Highlight the group's chosen majority (if incorrect) with red
+                                else if (oIndex === majorityAnswerIndex && oIndex !== correctAnswerIndex) {
+                                     labelClass += ' incorrect-majority';
                                 }
                                 // Disable interactions after checking
                                 labelClass += ' cursor-default';
                             }
-
+                            
+                            // The radio button is just for tracking the last clicked option, but the key is the onClick on the label
                             return `
-                                <label class="${labelClass}" for="${inputName}-o${oIndex}">
+                                <label 
+                                    class="${labelClass}" 
+                                    for="${inputName}-o${oIndex}"
+                                    onclick="${isChecked ? '' : `window.updateVote(${qIndex}, ${oIndex})`}"
+                                >
                                     <span class="text-base">${option}</span>
                                     <span class="font-semibold text-sm text-gray-500">
                                         (${currentVoteCount} votes)
                                     </span>
-                                    <input 
-                                        type="radio" 
-                                        id="${inputName}-o${oIndex}" 
-                                        name="${inputName}" 
-                                        value="${oIndex}" 
-                                        ${isVotedByMe ? 'checked' : ''} 
-                                        ${isChecked ? 'disabled' : ''}
-                                        onchange="window.updateVote(${qIndex}, ${oIndex})"
-                                    >
                                 </label>
                             `;
                         }).join('')}
@@ -427,20 +385,20 @@
                 </div>
                 
                 <p class="mt-4 text-center text-sm text-gray-500">
-                    Total Voters (Simulated + Me): ${TOTAL_VOTERS}.
-                    ${state.simulationInitialized ? `Group Answer (Majority Vote): Option ${majorityAnswerIndex !== -1 ? majorityAnswerIndex + 1 : 'N/A'}` : 'Group voting is disabled until you make your first selection.'}
+                    Total Votes Cast: ${totalVotesCast}. 
+                    Group Majority Vote: Option ${majorityAnswerIndex !== -1 ? majorityAnswerIndex + 1 : 'N/A'} (with ${maxVotes} votes)
                 </p>
             `;
 
             // 2. Render Navigation Controls
             const prevButton = `<button onclick="navigateQuestion(-1)" ${qIndex === 0 ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg transition duration-200 disabled:opacity-50">← Previous</button>`;
             
-            let nextButton;
             let checkButton;
 
             if (!isChecked) {
-                // LOCK IN / CHECK BUTTON
-                checkButton = `<button id="lock-in-btn" onclick="checkAnswer()" class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-xl shadow-lg transition duration-200 text-lg">
+                // LOCK IN / CHECK BUTTON (disabled until at least 1 vote is cast)
+                const isVoted = totalVotesCast > 0;
+                checkButton = `<button id="lock-in-btn" onclick="checkAnswer()" ${!isVoted ? 'disabled' : ''} class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-xl shadow-lg transition duration-200 text-lg disabled:opacity-50">
                                 LOCK IN GROUP VOTE!
                               </button>`;
             } else {
@@ -469,12 +427,14 @@
             if (isChecked !== undefined) {
                 feedbackBox.classList.remove('hidden', 'bg-yellow-100', 'border-yellow-400', 'text-yellow-800', 'bg-red-100', 'border-red-400', 'text-red-800');
                 
-                if (isCorrect) {
+                const majorityCorrect = majorityAnswerIndex === correctAnswerIndex;
+
+                if (majorityCorrect) {
                     feedbackBox.classList.add('bg-green-100', 'border-green-400', 'text-green-800');
-                    feedbackBox.innerHTML = '<p class="font-bold">✅ Correct!</p> <p>Your individual choice matched the fixed answer key. Great job!</p>';
+                    feedbackBox.innerHTML = '<p class="font-bold">✅ Correct!</p> <p>The class majority matched the fixed answer key. Great collective work!</p>';
                 } else {
                     feedbackBox.classList.add('bg-red-100', 'border-red-400', 'text-red-800');
-                    feedbackBox.innerHTML = '<p class="font-bold">❌ Incorrect.</p> <p>Your individual choice did not match the fixed answer key. The correct option is highlighted in green.</p>';
+                    feedbackBox.innerHTML = '<p class="font-bold">❌ Incorrect.</p> <p>The class majority did not match the fixed answer key. The correct option is highlighted in green.</p>';
                 }
             } else {
                 feedbackBox.classList.add('hidden');
@@ -483,6 +443,7 @@
 
             // Scroll to the question content only on initial load
             questionContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            saveData();
         }
 
         // Handles checking the answer for the current question
@@ -492,21 +453,19 @@
             const qIndex = state.currentQuestionIndex;
             const testId = currentTest.id;
 
-            const myVote = state.allVotes[`${testId}-q${qIndex}`] ? state.allVotes[`${testId}-q${qIndex}`][USER_ID] : null;
+            const currentQuestionVotes = state.allVotes[testId][`q${qIndex}`];
+            const totalVotesCast = currentQuestionVotes.reduce((sum, count) => sum + count, 0);
 
-            const feedbackBox = document.getElementById('feedback-box');
-            if (myVote === undefined || myVote === null) {
-                feedbackBox.classList.remove('hidden');
-                feedbackBox.classList.add('bg-yellow-100', 'border-yellow-400', 'text-yellow-800');
-                feedbackBox.innerHTML = '<p class="font-bold">Wait!</p> <p>Please click on one of the options (vote) before locking in your answer.</p>';
-                feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (totalVotesCast === 0) {
+                // Should not happen as button is disabled, but for safety:
+                console.error("Attempted check without voting.");
                 return;
             }
             
-            // Check against the fixed correct answer
-            const isCorrect = myVote === qData.correct;
+            const majorityIndex = state.majorityVote[testId][qIndex];
+            const isCorrect = majorityIndex === qData.correct;
             
-            // If the user has not voted or checked, run the check
+            // Record the check status (if not already checked)
             if (state.questionStatus[testId][qIndex] === undefined) {
                 state.questionStatus[testId][qIndex] = isCorrect;
                 saveData();
@@ -537,17 +496,17 @@
             let score = 0;
             const totalQuestions = currentTest.questions.length;
             
-            // Recalculate score based on current user's vote against the fixed answer
+            // Calculate final score based on class majority vs. correct answer
             for (let i = 0; i < totalQuestions; i++) {
-                const key = `${testId}-q${i}`;
-                const userVote = state.allVotes[key] ? state.allVotes[key][USER_ID] : undefined;
+                const majorityIndex = state.majorityVote[testId][i];
+                const isCorrect = majorityIndex === currentTest.questions[i].correct;
                 
-                // Ensure a vote exists before checking correctness
-                if (userVote !== undefined && userVote !== null) {
-                    const isCorrect = userVote === currentTest.questions[i].correct;
+                // Ensure a majority was determined before scoring
+                if (majorityIndex !== -1) {
                     if (isCorrect) {
                         score++;
                     }
+                    // Final record of status (in case user skipped checkAnswer)
                     state.questionStatus[testId][i] = isCorrect;
                 }
             }
@@ -555,12 +514,12 @@
 
             // Display overall results
             const color = score >= totalQuestions * 0.7 ? 'text-primary-green' : 'text-red-500';
-            const message = score >= totalQuestions * 0.7 ? "Excellent work! You've shown a strong grasp of the technical vocabulary." : "Good effort! Let's review the topics to improve your understanding of the core concepts.";
+            const message = score >= totalQuestions * 0.7 ? "Excellent class performance! The majority opinion was correct on most questions." : "Good effort! Let's review the topics where the class majority was incorrect.";
             
             quizContainer.innerHTML = `
                 <div class="text-center p-6 sm:p-10">
                     <h2 class="text-4xl font-extrabold text-quiz-purple mb-4">Test Complete! 🎉</h2>
-                    <p class="text-xl font-bold text-gray-800">Final Score for ${currentTest.title}:</p>
+                    <p class="text-xl font-bold text-gray-800">Final Class Score for ${currentTest.title}:</p>
                     <p class="text-6xl font-black mt-4 ${color}">${score} / ${totalQuestions}</p>
                     <p class="text-md text-gray-700 mt-4 max-w-md mx-auto">${message}</p>
                     
@@ -581,8 +540,9 @@
         function navigateTest(direction) {
             const newIndex = state.currentTestIndex + direction;
             if (newIndex >= 0 && newIndex < tests.length) {
-                state.currentTestIndex = newIndex;
+                state.currentTestIndex = 0; // Start new test at first question
                 state.isReadingPhase = true;
+                state.currentTestIndex = newIndex;
                 renderCurrentTest();
             } else if (newIndex === tests.length) {
                  quizContainer.innerHTML = `
