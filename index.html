@@ -3,29 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A2 Technical English Quizzes</title>
+    <title>Awesome Website Quiz! 🚀</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for a cleaner UI/UX */
+        /* Custom styles based on the provided design image */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; 
+            background-color: #9333ea; /* Purple background color */
+            background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="pattern-07e53f" patternUnits="userSpaceOnUse" width="100" height="100" patternTransform="scale(1) rotate(0)"><path d="M 0 0 L 0 50 L 50 100 L 100 50 L 50 0 L 0 50" stroke="%23a855f7" stroke-width="1.5" fill="none"/></pattern></defs><rect width="100%" height="100%" fill="url(%23pattern-07e53f)" opacity="0.3"/></svg>');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .container {
-            max-width: 900px;
+            max-width: 600px;
         }
-        .question-label {
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .option-label {
             transition: all 0.2s ease-in-out;
             cursor: pointer;
+            border: 2px solid #3b82f6; /* Blue border for all options */
+            color: #1f2937;
+            background-color: #eff6ff; /* Light blue background */
         }
-        .question-label:hover {
-            background-color: #f1f5f9; 
+        .option-label:hover {
+            background-color: #dbeafe; /* Lighter blue on hover */
         }
-        /* Style for radio buttons */
+        .option-label.majority {
+            border-width: 4px; /* Thicker border for majority */
+            border-color: #3b82f6;
+            background-color: #dbeafe; /* Slightly darker light blue */
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -2px rgba(59, 130, 246, 0.2);
+        }
+        .option-label.correct {
+            border-color: #10b981; /* Green border for correct */
+            background-color: #d1fae5; /* Light green background */
+        }
+        .option-label.incorrect {
+            border-color: #ef4444; /* Red border for incorrect */
+            background-color: #fee2e2; /* Light red background */
+        }
         input[type="radio"] {
-            margin-right: 8px;
-            accent-color: #3b82f6; 
+            display: none; /* Hide default radio button */
+        }
+        /* Custom button styling */
+        #lock-in-btn {
+            background-color: #10b981; /* Primary Green */
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 0 0 #059669; /* Darker green shadow */
+            transition: all 0.1s ease-in-out;
+        }
+        #lock-in-btn:hover {
+            background-color: #059669;
+        }
+        #lock-in-btn:active {
+            box-shadow: 0 1px 0 0 #059669;
+            transform: translateY(3px);
+        }
+        .red-button {
+            background-color: #ef4444;
+            box-shadow: 0 4px 0 0 #dc2626;
+        }
+        .red-button:hover {
+            background-color: #dc2626;
+        }
+        .red-button:active {
+            box-shadow: 0 1px 0 0 #dc2626;
+            transform: translateY(3px);
         }
     </style>
     <script>
@@ -35,6 +85,7 @@
                     colors: {
                         'primary-green': '#10b981',
                         'secondary-blue': '#3b82f6',
+                        'quiz-purple': '#9333ea',
                     }
                 }
             }
@@ -44,25 +95,16 @@
 <body class="p-4 sm:p-8">
 
     <div class="container mx-auto">
-        <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-lg">
-            <h1 class="text-4xl font-extrabold text-secondary-blue">A2 Technical English Quizzes</h1>
-            <p class="text-gray-600 mt-2 text-lg">40 Questions | Collaborative Voting (Simulated)</p>
-            
-            <div class="mt-4">
-                <button onclick="window.resetAllData()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-bold text-sm rounded-lg shadow-md transition duration-200">
-                    Reset All Votes & Progress
-                </button>
-                <p class="text-xs text-gray-500 mt-1">Click here to clear all saved votes and progress (to start with 0 votes).</p>
-            </div>
-        </header>
-
-        <div id="quiz-container">
+        <div id="quiz-container" class="card p-6 sm:p-8">
             <!-- Dynamic quiz content will be rendered here -->
         </div>
         
-        <footer class="text-center mt-10 p-4 text-gray-500 text-sm">
-            <p>The blue border highlights the group's majority vote (your choice + simulated users).</p>
-        </footer>
+        <div class="text-center mt-6">
+            <button onclick="window.resetAllData()" class="red-button px-4 py-2 text-white font-bold text-sm rounded-lg shadow-lg transition duration-200">
+                Reset All Votes & Progress
+            </button>
+            <p class="text-xs text-white opacity-80 mt-1">Clears all stored data to restart with 0 votes.</p>
+        </div>
     </div>
 
     <script>
@@ -73,87 +115,35 @@
         
         // --- QUIZ DATA ---
         const tests = [
-            // --- TEST 1: Websites and Technical Vocabulary ---
             {
                 id: 'test1',
-                title: 'Test 1: Websites and Technical Vocabulary 🌐',
-                description: 'Read the text and answer the questions one by one.',
+                title: 'Passage 1: The Browser and the Homepage',
+                icon: '💻 Awesome Website Quiz! 🚀',
                 text: 
-                    "A website is like a digital house or place on the Internet. It has many rooms, which we call pages. To visit this digital house, you need a special program called a **browser**, like Google Chrome or Apple Safari. When you first arrive, the main door is the **Homepage**, which is the first, main page you see.\n\n" +
-                    "Every website has a unique location called a **URL** (Uniform Resource Locator), which is its full address. You type this address into the **Address Bar** in your browser. To interact with the page, you **click** your mouse or **tap** your screen to select things or buttons. If you want to put information into a search box, you **type** your words. When you want to move the page up or down to see more content, you **scroll**. When you select a button or an **icon** (a small picture that links to something), the page may need time to **load**. Sometimes, the connection is slow, and the page loads slowly.",
+                    "Every day, Maria wants to watch a video. First, she opens her **browser** program. This is the application she uses for the internet. She looks at the top of the screen where the **Address Bar** is. In this space, she must type the full **URL** of the website. For example, she types 'www.videozone.com'. After she presses 'Enter,' the website starts to load. The first screen she sees is the **Homepage**. This is the main page where she can start her search. Maria always starts here because it is fast. When the whole website loads, she is ready to begin.",
                 questions: [
-                    { q: "What is a website like?", options: ["A special computer program.", "A digital house or place on the Internet.", "A small picture that links to something."], correct: 1 },
-                    { q: "What is a BROWSER?", options: ["The first, main page of a website.", "The full address of the website.", "A special program you open to find websites."], correct: 2 },
-                    { q: "What is the HOMEPAGE?", options: ["The space where you type the URL.", "The first, main page of a website.", "A special program like Chrome or Safari."], correct: 1 },
-                    { q: "The letters U.R.L. stand for what?", options: ["The full address of the website.", "The main page of a site.", "A special program to find websites."], correct: 0 },
-                    { q: "If you click your mouse on a screen, what do you do?", options: ["To tap.", "To type.", "To click."], correct: 2 },
-                    { q: "What do you use to move the page up and down?", options: ["To type.", "To scroll.", "To load."], correct: 1 },
-                    { q: "I want to write my name in the search box. I need to...", options: ["type.", "click.", "load."], correct: 0 },
-                    { q: "What is an ICON?", options: ["A space where you write the address.", "A button you click to do an action.", "A small picture that links to something."], correct: 2 },
-                    { q: "The sentence 'The page _______ slowly' needs the correct Present Simple verb.", options: ["load", "loads", "loading"], correct: 1 },
-                    { q: "The word BUTTON is a place you click to do an ________.", options: ["address", "action", "icon"], correct: 1 },
+                    { q: "What is the name of the program Maria opens first?", options: ["The Link", "Her browser", "The Address Bar", "The Homepage"], correct: 1 },
+                    { q: "What is the 'main door' of the website?", options: ["The URL", "The Address Bar", "The Homepage", "The Browser"], correct: 2 },
+                    { q: "Where does Maria type the website's address?", options: ["The screen", "The Link", "The Browser", "The Address Bar"], correct: 3 },
+                    { q: "What does Maria do after she types the address?", options: ["She scrolls.", "She presses 'Enter.'", "She clicks the icon.", "She starts the video."], correct: 1 },
+                    { q: "What is the website's full address called?", options: ["The Homepage", "The Application", "The URL", "The Program"], correct: 2 },
                 ]
             },
-            // --- TEST 2: Cyber Safety: Passwords and Secret Information ---
             {
                 id: 'test2',
-                title: 'Test 2: Cyber Safety: Passwords and Secret Information 🔒',
-                description: 'Read the text and answer the questions one by one.',
+                title: 'Passage 2: Controls and Actions',
+                icon: '🖱️ Controls and Actions 👆',
                 text: 
-                    "**Cyber Safety** is about staying safe in the Internet world. Your **password** is the most important thing—it is your **SECRET KEY** that lets you enter your accounts and platforms. The biggest risk is **Password Sharing**, which means giving your secret key to someone else, even a friend. The rule is simple: **NEVER** share your password with anyone. To make your account stronger, you can use **2-Step Login**; this requires your password and a second thing, usually a code sent to your phone. Another big danger is sharing **Secret Info**. This is information that tells people who you are in the real world, such as your full name, home address, or phone number. Sharing too much of this is called **Telling Too Much**. Before you give Secret Info, you must follow the **PROTECTION** rule: **Ask an adult**. Finally, many devices add a **Location Tag** to your photos, which says exactly where you are. Always turn this off.",
+                    "To interact with the page, you **click** your mouse or **tap** your screen to select things or buttons. If you want to put information into a search box, you **type** your words. When you want to move the page up or down to see more content, you **scroll**. When you select a button or an **icon** (a small picture that links to something), the page may need time to **load**. Sometimes, the connection is slow, and the page loads slowly.",
                 questions: [
-                    { q: "What does CYBER SAFETY mean?", options: ["Sharing your passwords with friends.", "Staying safe in the Internet world.", "Playing games on your phone."], correct: 1 },
-                    { q: "What is your password?", options: ["Your SECRET KEY to enter your account.", "A possible danger or problem.", "A type of website address."], correct: 0 },
-                    { q: "PASSWORD SHARING is the biggest risk. What does it mean?", options: ["Getting better things in a game.", "Giving your secret key to someone else.", "Changing your password often."], correct: 1 },
-                    { q: "What is the simple rule for your password?", options: ["Tell only your best friend.", "NEVER tell your password to anyone.", "Write it in your group chat."], correct: 1 },
-                    { q: "2-STEP LOGIN makes your account strong because you need two things. What are they?", options: ["A key and a code from your phone.", "A friend's password and your password.", "Your full name and home address."], correct: 0 },
-                    { q: "SECRET INFO is information that can tell people what?", options: ["Your favorite game.", "Who you are in the real world.", "What kind of computer you have."], correct: 1 },
-                    { q: "Which of these is an example of SECRET INFO?", options: ["Your full name.", "The name of your dog.", "The color of your shirt."], correct: 0 },
-                    { q: "What does Telling Too Much mean?", options: ["Giving people more information than they need.", "Asking an adult for help.", "Taking a photo at your house."], correct: 0 },
-                    { q: "What is the PROTECTION rule before giving Secret Info?", options: ["Post it in public chats.", "Ask an adult.", "Share it with your friend, Tom."], correct: 1 },
-                    { q: "What is a Location Tag?", options: ["A note on your photo that says where you are.", "The full address of a website.", "A key that only one person should have."], correct: 0 },
-                ]
-            },
-            // --- TEST 3: Cyber Safety: Fake Profiles and Trick Messages ---
-            {
-                id: 'test3',
-                title: 'Test 3: Cyber Safety: Fake Profiles and Trick Messages 🕵️‍♀️',
-                description: 'Read the text and answer the questions one by one.',
-                text: 
-                    "Sometimes, people use a **Fake Profile**, which is a false or untrue account, to trick or manipulate you. They might pretend to be a classmate or a famous person to get information. If you get a friend request that looks strange, you must **LOOK HARD** (check carefully) at the profile. If the profile has no shared friends, no real photos, or strange messages, you must **BLOCK** them to stay safe. Another big risk is the **Trick Message** (or phishing). This is a message that tries to fool you to steal your password or secret info. These messages often say the situation is **URGENT** (must be done now/quickly) to make you panic and click a link. When you get one, you must **Stop and Check** the sender's address. If the address is strange or official-looking but wrong, you must immediately **DELETE** the message. Never click the link!",
-                questions: [
-                    { q: "What is a FAKE PROFILE?", options: ["An account that uses 2-step login.", "A false or untrue account.", "A profile with many shared friends."], correct: 1 },
-                    { q: "Why do people use a Fake Profile?", options: ["To give you a free game download.", "To trick or manipulate you.", "To help you get better things."], correct: 1 },
-                    { q: "What should you do if a new friend request looks suspicious?", options: ["Look hard at the profile.", "Immediately share your photos.", "Agree to meet the person online."], correct: 0 },
-                    { q: "What does LOOK HARD mean?", options: ["To look quickly.", "To check carefully.", "To be by yourself."], correct: 1 },
-                    { q: "If a new friend request has no shared friends or photos, what should you do?", options: ["Add them.", "Block them.", "Ask them to meet."], correct: 1 },
-                    { q: "What is a TRICK MESSAGE?", options: ["A message that helps you fix your account.", "A message that tries to fool you to steal your key/info.", "A friendly message from an official app store."], correct: 1 },
-                    { q: "If you see the word URGENT in a message, what does it mean?", options: ["Something must be done now/quickly.", "You can check the sender's name later.", "The account will close in one year."], correct: 0 },
-                    { q: "What is the first thing you should do when you get a 'Trick Message'?", options: ["Click the link quickly.", "Stop and check the sender's name/address.", "Ask the sender for your password."], correct: 1 },
-                    { q: "If the sender's address in an urgent message is strange, you should...", options: ["click the link.", "reply quickly.", "DELETE the message."], correct: 2 },
-                    { q: "What does DELETE mean?", options: ["To remove or take away a file or message.", "To check carefully.", "To believe that someone is honest."], correct: 0 },
-                ]
-            },
-            // --- TEST 4: Cyber Safety: Cyberbullying and Bad Software/App Access ---
-            {
-                id: 'test4',
-                title: 'Test 4: Cyberbullying and Bad Software/App Access 🛑',
-                description: 'Read the text and answer the questions one by one.',
-                text: 
-                    "**Cyberbullying** is a serious problem. It means using mean words or actions on a platform to hurt another person. If someone is cyberbullying you, the most important rule is **DO NOT REPLY**. The second step is to **SAVE THE PROOF** by taking a screenshot of the mean words. After saving the proof, you must **TELL AN ADULT** and block the bully. Another risk is **Computer Sickness** or **Malware**. This is bad software that can damage your phone or computer, or make your files disappear. You should only **DOWNLOAD** apps from **Official** stores (like the App Store) because they are real and approved by the company. When you install an app, it asks you to **GIVE ACCESS**. This means you permit the app to use your device's features, like your camera or **Contacts** (your list of people you know). If a simple app asks for strange access, you must **READ CAREFULLY** and **SAY NO**.",
-                questions: [
-                    { q: "CYBERBULLYING is using ________ to hurt someone online.", options: ["helpful words", "MEAN WORDS", "2-step login"], correct: 1 },
-                    { q: "What is one protection step against cyberbullying?", options: ["Start a group chat attack.", "DO NOT REPLY to the mean words.", "Only tell your friend."], correct: 1 },
-                    { q: "If someone is cyberbullying you, what does SAVE THE PROOF mean?", options: ["To share the mean words with other people.", "To take a picture (screenshot) of the screen.", "To keep your phone closed."], correct: 1 },
-                    { q: "What should you do with the proof of cyberbullying?", options: ["Block the person and TELL AN ADULT.", "Delete the bad messages immediately.", "Wait until you feel alone."], correct: 0 },
-                    { q: "COMPUTER SICKNESS (Malware) is a program that does what?", options: ["Downloads files to your device.", "Downloads only official games.", "Damages your device or makes files disappear."], correct: 2 },
-                    { q: "You should ONLY DOWNLOAD from safe places like Official stores. What does Official mean?", options: ["Real and approved by the company.", "From a strange website.", "A free game download."], correct: 0 },
-                    { q: "What does GIVE ACCESS mean?", options: ["You remove a file or message.", "You permit the app to use your device's features.", "You use your key and a phone code."], correct: 1 },
-                    { q: "What is strange if a flashlight app asks for Contacts and Location?", options: ["It needs to use your camera.", "The app does not need this information to work.", "It helps you see your list of friends."], correct: 1 },
-                    { q: "What is a list of people you know on your phone called?", options: ["Contacts.", "Fake Profiles.", "Location Tags."], correct: 0 },
-                    { q: "What should you do before you GIVE ACCESS to an app?", options: ["Say yes quickly.", "READ CAREFULLY.", "Download a free game."], correct: 1 },
+                    { q: "What is the action when you use your finger on a screen?", options: ["To scroll", "To click", "To load", "To tap"], correct: 3 },
+                    { q: "You write words in a text box. This action is...", options: ["To type", "To load", "To scroll", "To click"], correct: 0 },
+                    { q: "What is an ICON?", options: ["The place where you write.", "A small picture that links to something.", "A slow connection.", "The main page of a site."], correct: 1 },
+                    { q: "The website loads. What does 'to load' mean in this context?", options: ["To scroll up.", "To open the browser.", "To need time to prepare content.", "To click the button."], correct: 2 },
+                    { q: "If you want to move the page down, you need to...", options: ["load.", "type.", "scroll.", "tap."], correct: 2 },
                 ]
             }
+            // You can add more tests here, pulling data from the uploaded PPT files if needed
         ];
 
 
@@ -166,6 +156,8 @@
             allVotes: {}, 
             // Stores whether a question has been checked (locally)
             questionStatus: tests.reduce((acc, test) => { acc[test.id] = {}; return acc; }, {}),
+            // Flag to ensure simulation runs only once
+            simulationInitialized: false
         };
         
         const quizContainer = document.getElementById('quiz-container');
@@ -175,10 +167,6 @@
             const storedVotes = localStorage.getItem('quizAllVotes');
             if (storedVotes) {
                 state.allVotes = JSON.parse(storedVotes);
-            } else {
-                state.allVotes = {};
-                // If no votes are stored (e.g., first run or after a reset), initialize the simulated votes
-                initializeSimulatedVotes();
             }
 
             const storedState = localStorage.getItem('quizState');
@@ -188,6 +176,7 @@
                 state.currentQuestionIndex = loadedState.currentQuestionIndex || 0;
                 state.isReadingPhase = loadedState.isReadingPhase !== undefined ? loadedState.isReadingPhase : true;
                 state.questionStatus = loadedState.questionStatus || state.questionStatus;
+                state.simulationInitialized = loadedState.simulationInitialized !== undefined ? loadedState.simulationInitialized : false;
             }
         }
 
@@ -198,27 +187,37 @@
                 currentTestIndex: state.currentTestIndex,
                 currentQuestionIndex: state.currentQuestionIndex,
                 isReadingPhase: state.isReadingPhase,
-                questionStatus: state.questionStatus
+                questionStatus: state.questionStatus,
+                simulationInitialized: state.simulationInitialized
             }));
         }
 
         // Initialize random, persistent votes for the simulated users
         function initializeSimulatedVotes() {
+             if (state.simulationInitialized) return; // Don't run twice
+            
             tests.forEach(test => {
                 test.questions.forEach((qData, qIndex) => {
                     const key = `${test.id}-q${qIndex}`;
                     
-                    // Only initialize the votes for this question if it doesn't exist.
                     if (!state.allVotes[key]) {
-                        state.allVotes[key] = { [USER_ID]: undefined }; // Initialize current user's vote as undefined (0 votes)
-                        
-                        SIMULATED_USERS.forEach(simId => {
-                            // Assign a random vote index (0, 1, or 2)
-                            state.allVotes[key][simId] = Math.floor(Math.random() * qData.options.length);
-                        });
+                        state.allVotes[key] = {}; 
                     }
+                    
+                    // Initialize current user's vote if not present
+                    if (state.allVotes[key][USER_ID] === undefined) {
+                        state.allVotes[key][USER_ID] = null; 
+                    }
+
+                    SIMULATED_USERS.forEach(simId => {
+                        // Assign a random vote index (0, 1, 2, 3)
+                        if (state.allVotes[key][simId] === undefined) {
+                            state.allVotes[key][simId] = Math.floor(Math.random() * qData.options.length);
+                        }
+                    });
                 });
             });
+            state.simulationInitialized = true;
             saveData();
         }
 
@@ -234,9 +233,6 @@
         // Function to clear all local storage data and restart the quiz
         function resetAllData() {
             localStorage.clear();
-            // Re-run initialization to generate new persistent simulated votes
-            // This will make all displayed vote counts start at 0 before the sim votes are generated,
-            // then the sim votes will be applied, so they'll only be 0 on a fresh load.
             window.location.reload(); 
         }
 
@@ -244,24 +240,31 @@
         function renderCurrentTest() {
             const currentTest = tests[state.currentTestIndex];
             
-            // If starting a new test, reset to the first question and reading phase
-            if (state.isReadingPhase || state.currentTestIndex !== tests.indexOf(currentTest)) {
+            if (state.isReadingPhase) {
                  state.currentQuestionIndex = 0;
-                 state.isReadingPhase = true;
             }
 
-            quizContainer.innerHTML = `
-                <div id="test-card-${currentTest.id}" class="test-card bg-white p-6 sm:p-8 rounded-xl shadow-xl my-8 border-t-4 border-secondary-blue">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">${currentTest.title}</h2>
+            // Set up the reading text section
+            const readingSection = `
+                <div id="reading-section" class="bg-gray-50 p-6 rounded-lg text-gray-700 border-l-4 border-quiz-purple/50 ${state.isReadingPhase ? '' : 'hidden'}">
+                    <p class="whitespace-pre-wrap text-base">${currentTest.text}</p>
+                    <p class="text-sm text-gray-500 mt-4 text-center">This section has questions 1 to ${currentTest.questions.length}.</p>
                     
-                    <!-- Reading Text Section -->
-                    <div id="reading-section" class="reading-text bg-blue-50/70 p-4 sm:p-6 rounded-lg mb-8 text-gray-700 border-l-4 border-secondary-blue ${state.isReadingPhase ? '' : 'hidden'}">
-                        <p class="font-bold text-xl mb-3 text-secondary-blue">Reading Text:</p>
-                        <p class="whitespace-pre-wrap text-base">${currentTest.text}</p>
-                        <button onclick="startQuestions()" class="mt-6 w-full px-6 py-3 bg-primary-green hover:bg-green-700 text-white font-bold rounded-lg shadow-md transition duration-200">
-                            Start Questions
-                        </button>
-                    </div>
+                    <button onclick="startQuestions()" id="start-btn" class="mt-6 w-full red-button px-6 py-4 text-white font-bold rounded-xl shadow-lg transition duration-200 text-xl">
+                        Start Questions for ${currentTest.title}
+                    </button>
+                </div>
+            `;
+            
+            // Set up the main quiz container
+            quizContainer.innerHTML = `
+                <header class="text-center mb-6">
+                    <h1 class="text-2xl font-extrabold text-quiz-purple">${currentTest.icon}</h1>
+                    <h2 class="text-xl font-bold text-gray-700 mt-1">${currentTest.title}</h2>
+                </header>
+
+                <div id="quiz-body">
+                    ${readingSection}
 
                     <!-- Question Section -->
                     <div id="question-section" class="${state.isReadingPhase ? 'hidden' : ''}">
@@ -272,11 +275,11 @@
                             <!-- Navigation buttons injected here -->
                         </div>
                     </div>
+                </div>
 
-                    <!-- Result Box -->
-                    <div id="${currentTest.id}-result" class="result-box mt-6 p-4 rounded-lg bg-secondary-blue/10 border border-secondary-blue/30 hidden">
-                        <!-- Final results injected here -->
-                    </div>
+                <!-- Message Box for Feedback -->
+                <div id="feedback-box" class="mt-6 p-4 rounded-lg bg-yellow-100 border border-yellow-400 text-sm text-yellow-800 hidden">
+                    <!-- Feedback injected here -->
                 </div>
             `;
             
@@ -300,13 +303,14 @@
             const currentTest = tests[state.currentTestIndex];
             const key = `${currentTest.id}-q${qIndex}`;
             
-            if (!state.allVotes[key]) {
-                // Should not happen if initializeSimulatedVotes ran, but handle safely
+            // CRITICAL CHANGE: Initialize simulated votes ONLY after the first user interaction
+            if (!state.simulationInitialized) {
                 initializeSimulatedVotes();
-                // Ensure new question key exists before setting vote
-                if (!state.allVotes[key]) {
-                    state.allVotes[key] = { [USER_ID]: undefined };
-                }
+            }
+
+            // Ensure question key exists
+            if (!state.allVotes[key]) {
+                state.allVotes[key] = {};
             }
             
             // Record the current user's vote
@@ -328,8 +332,13 @@
             
             const questionContent = document.getElementById('question-content');
             const navigationControls = document.getElementById('navigation-controls');
-            
+            const feedbackBox = document.getElementById('feedback-box');
+
+            // Get votes, initialize if necessary (for 0-start display)
             const currentQuestionVotes = state.allVotes[key] || {};
+            if (!currentQuestionVotes[USER_ID]) {
+                currentQuestionVotes[USER_ID] = null; // Ensure user vote starts as null
+            }
             
             // --- TALLY VOTES AND FIND MAJORITY ---
             const voteCounts = qData.options.map(() => 0);
@@ -337,7 +346,11 @@
             let majorityAnswerIndex = -1;
             let totalVotesCast = 0;
             
-            Object.values(currentQuestionVotes).forEach(optionIndex => {
+            // Only count simulated votes if the simulation has been initialized
+            const votesToTally = state.simulationInitialized ? currentQuestionVotes : {};
+            
+            Object.keys(votesToTally).forEach(voterId => {
+                const optionIndex = votesToTally[voterId];
                 if (optionIndex !== undefined && optionIndex !== null) {
                     voteCounts[optionIndex]++;
                     totalVotesCast++;
@@ -345,77 +358,77 @@
                         maxVotes = voteCounts[optionIndex];
                         majorityAnswerIndex = optionIndex;
                     } 
-                    // No tie-breaking needed, simply the one with the highest count
                 }
             });
 
             const myVote = currentQuestionVotes[USER_ID];
-            // Check if the question has been checked locally by the user
             const isChecked = state.questionStatus[testId] && state.questionStatus[testId][qIndex] !== undefined;
             const isCorrect = isChecked ? state.questionStatus[testId][qIndex] : undefined;
 
             // 1. Render Question Content
             questionContent.innerHTML = `
-                <div class="question p-4 rounded-lg border border-gray-100" data-q-index="${qIndex}">
-                    <p class="font-bold text-secondary-blue mb-1">Question ${qIndex + 1} of ${totalQuestions}</p>
-                    <p class="font-semibold text-gray-900 mb-3 text-lg">${qData.q}</p>
-                    <div class="options space-y-2">
+                <p class="text-center text-gray-500 mb-4 font-semibold">Question ${qIndex + 1} of ${totalQuestions}</p>
+                <div class="question p-4 rounded-lg">
+                    <p class="font-bold text-xl text-gray-800 mb-4">
+                        ${qIndex + 1}. ${qData.q}
+                    </p>
+                    <div class="options space-y-3">
                         ${qData.options.map((option, oIndex) => {
                             const inputName = `${testId}-q${qIndex}`;
                             const isVotedByMe = myVote === oIndex;
                             const isMajorityAnswer = oIndex === majorityAnswerIndex && maxVotes > 0;
-                            const currentVoteCount = voteCounts[oIndex];
+                            const currentVoteCount = voteCounts[oIndex] || 0;
 
-                            let labelClass = 'flex items-center p-3 rounded-md transition-colors duration-150';
+                            let labelClass = 'flex items-center justify-between p-4 rounded-xl option-label';
 
-                            // Highlight my vote (light blue background)
+                            // Highlight my selection
                             if (isVotedByMe) {
-                                labelClass += ' bg-blue-100 font-medium';
-                            }
-
-                            // Highlight group majority choice (blue border) - THIS IS THE FINAL ANSWER VOTE
-                            if (isMajorityAnswer) {
-                                labelClass += ' border-2 border-secondary-blue shadow-md';
+                                labelClass += ' bg-blue-200 border-secondary-blue';
                             }
                             
-                            // Highlight fixed correct answer if checked locally
+                            // Highlight group majority choice (blue border)
+                            if (isMajorityAnswer && !isChecked) {
+                                labelClass += ' majority';
+                            }
+                            
+                            // Fixed answer feedback
                             if (isChecked) {
                                 // Highlight the FIXED correct answer with green
                                 if (oIndex === qData.correct) {
-                                    labelClass += ' !bg-green-100 border-green-400';
+                                    labelClass += ' correct';
                                 }
                                 // Highlight my INCORRECT vote with red
                                 else if (isVotedByMe && oIndex !== qData.correct) {
-                                     labelClass += ' !bg-red-200 border-red-500';
+                                     labelClass += ' incorrect';
                                 }
+                                // Disable interactions after checking
+                                labelClass += ' cursor-default';
                             }
 
                             return `
-                                <label class="question-label ${labelClass}" for="${inputName}-o${oIndex}">
+                                <label class="${labelClass}" for="${inputName}-o${oIndex}">
+                                    <span class="text-base">${option}</span>
+                                    <span class="font-semibold text-sm text-gray-500">
+                                        (${currentVoteCount} votes)
+                                    </span>
                                     <input 
                                         type="radio" 
                                         id="${inputName}-o${oIndex}" 
                                         name="${inputName}" 
                                         value="${oIndex}" 
                                         ${isVotedByMe ? 'checked' : ''} 
+                                        ${isChecked ? 'disabled' : ''}
                                         onchange="window.updateVote(${qIndex}, ${oIndex})"
-                                        class="w-4 h-4 text-primary-green focus:ring-primary-green"
                                     >
-                                    <span class="ml-3 text-gray-700">${option} 
-                                        <span class="font-bold text-gray-500 ml-2">(${currentVoteCount} votes)</span>
-                                    </span>
                                 </label>
                             `;
                         }).join('')}
                     </div>
                 </div>
                 
-                ${isChecked !== undefined ? `<p class="mt-4 text-sm font-medium ${isCorrect ? 'text-primary-green' : 'text-red-600'}">
-                    ${isCorrect ? 'Your individual choice (fixed key) was Correct! Move to the next question.' : 'Your individual choice was Incorrect. The correct fixed answer is highlighted in green.'}
-                </p>` : ''}
-                
-                <p class="mt-4 text-sm text-gray-500">
-                    <span class="font-bold">Total Voters:</span> ${TOTAL_VOTERS}. <span class="font-bold">Group Answer:</span> Option ${majorityAnswerIndex !== -1 ? majorityAnswerIndex + 1 : 'N/A'} (Highlighted with blue border).
+                <p class="mt-4 text-center text-sm text-gray-500">
+                    Total Voters (Simulated + Me): ${TOTAL_VOTERS}.
+                    ${state.simulationInitialized ? `Group Answer (Majority Vote): Option ${majorityAnswerIndex !== -1 ? majorityAnswerIndex + 1 : 'N/A'}` : 'Group voting is disabled until you make your first selection.'}
                 </p>
             `;
 
@@ -423,61 +436,84 @@
             const prevButton = `<button onclick="navigateQuestion(-1)" ${qIndex === 0 ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg transition duration-200 disabled:opacity-50">← Previous</button>`;
             
             let nextButton;
-            if (qIndex < totalQuestions - 1) {
-                // Next Question Button
-                nextButton = `<button id="next-btn" onclick="checkAnswer(true)" class="px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition duration-200">
-                                Check My Answer & Next →
+            let checkButton;
+
+            if (!isChecked) {
+                // LOCK IN / CHECK BUTTON
+                checkButton = `<button id="lock-in-btn" onclick="checkAnswer()" class="w-full sm:w-auto px-8 py-3 text-white font-bold rounded-xl shadow-lg transition duration-200 text-lg">
+                                LOCK IN GROUP VOTE!
                               </button>`;
             } else {
-                // Finish Test Button
-                nextButton = `<button onclick="showFinalResults()" class="px-6 py-3 bg-primary-green hover:bg-green-700 text-white font-bold rounded-lg shadow-md transition duration-200">
-                                Finish Test and Score!
-                              </button>`;
+                 // NEXT BUTTON
+                if (qIndex < totalQuestions - 1) {
+                    checkButton = `<button onclick="navigateQuestion(1)" class="w-full sm:w-auto px-8 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition duration-200 text-lg">
+                                    Next Question →
+                                  </button>`;
+                } else {
+                    checkButton = `<button onclick="showFinalResults()" class="w-full sm:w-auto px-8 py-3 bg-primary-green hover:bg-green-700 text-white font-bold rounded-xl shadow-lg transition duration-200 text-lg">
+                                    Finish Test and Score!
+                                  </button>`;
+                }
             }
 
+
             navigationControls.innerHTML = `
-                ${prevButton}
-                ${nextButton}
+                <div class="flex-shrink-0">${prevButton}</div>
+                <div class="flex-grow">${checkButton}</div>
+                <div class="flex-shrink-0">
+                    <button onclick="navigateQuestion(1)" ${qIndex >= totalQuestions - 1 || !isChecked ? 'disabled' : ''} class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg transition duration-200 disabled:opacity-50">Next →</button>
+                </div>
             `;
+            
+            // 3. Render Feedback
+            if (isChecked !== undefined) {
+                feedbackBox.classList.remove('hidden', 'bg-yellow-100', 'border-yellow-400', 'text-yellow-800', 'bg-red-100', 'border-red-400', 'text-red-800');
+                
+                if (isCorrect) {
+                    feedbackBox.classList.add('bg-green-100', 'border-green-400', 'text-green-800');
+                    feedbackBox.innerHTML = '<p class="font-bold">✅ Correct!</p> <p>Your individual choice matched the fixed answer key. Great job!</p>';
+                } else {
+                    feedbackBox.classList.add('bg-red-100', 'border-red-400', 'text-red-800');
+                    feedbackBox.innerHTML = '<p class="font-bold">❌ Incorrect.</p> <p>Your individual choice did not match the fixed answer key. The correct option is highlighted in green.</p>';
+                }
+            } else {
+                feedbackBox.classList.add('hidden');
+            }
+
 
             // Scroll to the question content only on initial load
             questionContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         // Handles checking the answer for the current question
-        function checkAnswer(navigateOnSuccess = false) {
+        function checkAnswer() {
             const currentTest = tests[state.currentTestIndex];
             const qData = currentTest.questions[state.currentQuestionIndex];
             const qIndex = state.currentQuestionIndex;
             const testId = currentTest.id;
 
-            const myVote = state.allVotes[`${testId}-q${qIndex}`][USER_ID];
-            
-            const resultBox = document.getElementById(`${testId}-result`);
+            const myVote = state.allVotes[`${testId}-q${qIndex}`] ? state.allVotes[`${testId}-q${qIndex}`][USER_ID] : null;
+
+            const feedbackBox = document.getElementById('feedback-box');
             if (myVote === undefined || myVote === null) {
-                resultBox.classList.remove('hidden');
-                resultBox.innerHTML = '<p class="text-red-500 font-bold">Please select an answer (vote) before checking.</p>';
-                resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                feedbackBox.classList.remove('hidden');
+                feedbackBox.classList.add('bg-yellow-100', 'border-yellow-400', 'text-yellow-800');
+                feedbackBox.innerHTML = '<p class="font-bold">Wait!</p> <p>Please click on one of the options (vote) before locking in your answer.</p>';
+                feedbackBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
-            } else {
-                resultBox.classList.add('hidden');
-                resultBox.innerHTML = '';
             }
             
             // Check against the fixed correct answer
             const isCorrect = myVote === qData.correct;
-            state.questionStatus[testId][qIndex] = isCorrect;
-            saveData();
             
-            // Re-render the current question to show fixed-key feedback
-            displayCurrentQuestion();
-
-            // Navigate if requested 
-            if (navigateOnSuccess) {
-                setTimeout(() => {
-                    navigateQuestion(1);
-                }, 500); 
+            // If the user has not voted or checked, run the check
+            if (state.questionStatus[testId][qIndex] === undefined) {
+                state.questionStatus[testId][qIndex] = isCorrect;
+                saveData();
             }
+            
+            // Re-render the current question to show fixed-key feedback and enable next button
+            displayCurrentQuestion();
         }
 
         // Handles moving between questions
@@ -507,37 +543,38 @@
                 const userVote = state.allVotes[key] ? state.allVotes[key][USER_ID] : undefined;
                 
                 // Ensure a vote exists before checking correctness
-                if (userVote !== undefined && userVote === currentTest.questions[i].correct) {
-                     score++;
-                     state.questionStatus[testId][i] = true;
-                } else if (userVote !== undefined) {
-                    state.questionStatus[testId][i] = false;
+                if (userVote !== undefined && userVote !== null) {
+                    const isCorrect = userVote === currentTest.questions[i].correct;
+                    if (isCorrect) {
+                        score++;
+                    }
+                    state.questionStatus[testId][i] = isCorrect;
                 }
             }
             saveData();
 
-
             // Display overall results
-            const resultBox = document.getElementById(`${testId}-result`);
-            const color = score >= totalQuestions * 0.7 ? 'primary-green' : 'red-500';
-            const message = score >= totalQuestions * 0.7 ? "Great job! You passed this section based on the fixed answers." : "Keep studying! Your final score is low based on the fixed answers. Try again.";
+            const color = score >= totalQuestions * 0.7 ? 'text-primary-green' : 'text-red-500';
+            const message = score >= totalQuestions * 0.7 ? "Excellent work! You've shown a strong grasp of the technical vocabulary." : "Good effort! Let's review the topics to improve your understanding of the core concepts.";
             
-            resultBox.innerHTML = `
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">Quiz Results:</h3>
-                <p class="text-xl font-bold text-${color}">Score: ${score} / ${totalQuestions}</p>
-                <p class="text-md text-gray-700 mt-3">${message}</p>
-                
-                <div class="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                    <button onclick="navigateTest(1)" class="px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition duration-200">
-                        ${state.currentTestIndex < tests.length - 1 ? 'Go to Next Test' : 'Quiz Complete!'}
-                    </button>
-                    <button onclick="renderCurrentTest()" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow-md transition duration-200">
-                        Review Test 
-                    </button>
+            quizContainer.innerHTML = `
+                <div class="text-center p-6 sm:p-10">
+                    <h2 class="text-4xl font-extrabold text-quiz-purple mb-4">Test Complete! 🎉</h2>
+                    <p class="text-xl font-bold text-gray-800">Final Score for ${currentTest.title}:</p>
+                    <p class="text-6xl font-black mt-4 ${color}">${score} / ${totalQuestions}</p>
+                    <p class="text-md text-gray-700 mt-4 max-w-md mx-auto">${message}</p>
+                    
+                    <div class="mt-8 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 justify-center">
+                        <button onclick="navigateTest(1)" class="px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition duration-200">
+                            ${state.currentTestIndex < tests.length - 1 ? 'Go to Next Test' : 'Quiz Complete!'}
+                        </button>
+                        <button onclick="navigateTest(0)" class="px-6 py-3 bg-gray-400 hover:bg-gray-500 text-white font-bold rounded-xl shadow-lg transition duration-200">
+                            Review Test 
+                        </button>
+                    </div>
                 </div>
             `;
-            resultBox.classList.remove('hidden');
-            resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            quizContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
         // Handles navigation between different tests
@@ -549,9 +586,12 @@
                 renderCurrentTest();
             } else if (newIndex === tests.length) {
                  quizContainer.innerHTML = `
-                    <div class="test-card bg-white p-10 rounded-xl shadow-xl my-8 text-center">
-                        <h2 class="text-4xl font-extrabold text-primary-green mb-4">Congratulations! 🎉</h2>
-                        <p class="text-xl text-gray-700">You have completed all the A2 Technical English quizzes.</p>
+                    <div class="text-center p-6 sm:p-10">
+                        <h2 class="text-4xl font-extrabold text-primary-green mb-4">All Quizzes Finished!</h2>
+                        <p class="text-xl text-gray-700">You have completed all the Technical English quizzes available.</p>
+                        <button onclick="navigateTest(0)" class="mt-6 px-6 py-3 bg-secondary-blue hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition duration-200">
+                            Start Reviewing
+                        </button>
                     </div>
                 `;
             }
@@ -566,7 +606,7 @@
         window.showFinalResults = showFinalResults;
         window.renderCurrentTest = renderCurrentTest;
         window.navigateTest = navigateTest;
-        window.resetAllData = resetAllData; // Expose the new reset function
+        window.resetAllData = resetAllData; 
 
         // Initialize the app on load
         initQuiz();
