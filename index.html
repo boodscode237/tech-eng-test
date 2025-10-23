@@ -286,7 +286,7 @@
             quizContainer.innerHTML = `
                 <header class="text-center mb-6">
                     <h1 class="text-2xl font-extrabold text-quiz-purple">${currentTest.icon}</h1>
-                    <h2 class="text-xl font-bold text-gray-700 mt-1">${currentTest.title} (A2 Level)</h2>
+                    <h2 class="text-xl font-bold text-gray-700 mt-1">${currentTest.title}</h2>
                 </header>
 
                 <div id="quiz-body">
@@ -303,9 +303,9 @@
                     </div>
                 </div>
 
-                <!-- Message Box for Feedback -->
-                <div id="feedback-box" class="mt-6 p-4 rounded-lg bg-yellow-100 border border-yellow-400 text-sm text-yellow-800 hidden">
-                    <!-- Feedback injected here -->
+                <!-- Message Box for Feedback (Kept but always hidden to follow user request) -->
+                <div id="feedback-box" class="mt-6 p-4 rounded-lg hidden">
+                    <!-- Feedback is intentionally left empty/hidden as per user request -->
                 </div>
             `;
             
@@ -401,7 +401,7 @@
                                 labelClass += ' majority';
                             }
                             
-                            // Fixed answer feedback
+                            // Fixed answer feedback (Visual only, after checking)
                             if (isChecked) {
                                 // Highlight the FIXED correct answer with green
                                 if (oIndex === correctAnswerIndex) {
@@ -471,22 +471,9 @@
                 </div>
             `;
             
-            // 3. Render Feedback
-            if (isChecked !== undefined) {
-                feedbackBox.classList.remove('hidden', 'bg-yellow-100', 'border-yellow-400', 'text-yellow-800', 'bg-red-100', 'border-red-400', 'text-red-800', 'bg-green-100', 'border-green-400', 'text-green-800');
-                
-                const majorityCorrect = majorityAnswerIndex === correctAnswerIndex;
-
-                if (majorityCorrect) {
-                    feedbackBox.classList.add('bg-green-100', 'border-green-400', 'text-green-800');
-                    feedbackBox.innerHTML = '<p class="font-bold">✅ Correct!</p> <p>The class majority matched the fixed answer key. Great collective work!</p>';
-                } else {
-                    feedbackBox.classList.add('bg-red-100', 'border-red-400', 'text-red-800');
-                    feedbackBox.innerHTML = '<p class="font-bold">❌ Incorrect.</p> <p>The class majority did not match the fixed answer key. The correct option is highlighted in green.</p>';
-                }
-            } else {
-                feedbackBox.classList.add('hidden');
-            }
+            // 3. Render Feedback (REMOVED EXPLICIT TEXT FEEDBACK AS REQUESTED)
+            // The visual feedback (green/red borders) applied in step 1 remains.
+            feedbackBox.classList.add('hidden');
 
 
             // Scroll to the question content only on initial load
